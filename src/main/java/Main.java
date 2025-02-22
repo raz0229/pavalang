@@ -19,7 +19,8 @@ public class Main {
     COMMA("COMMA", ','),
     PLUS("PLUS", '+'),
     MINUS("MINUS", '-'),
-    SEMICOLON("SEMICOLON", ';');
+    SEMICOLON("SEMICOLON", ';'),
+    EQUAL("EQUAL", '=');
 
 
     private final String token;
@@ -38,6 +39,26 @@ public class Main {
     }
   }
 
+  public enum DualCharTokens {
+
+    EQUAL_EQUAL("EQUAL_EQUAL", "==");
+
+    private final String token;
+    private final String value;
+  
+    DualCharTokens(String token, String value) {
+      this.token = token;
+      this.value = value;
+    }
+
+    public String getToken() {
+      return token;
+    }
+    public String getValue() {
+      return value;
+    }
+  }
+
   static String tokenScanner(Character ch, int lineNumber) throws Exception {
     for (Tokens tk : Tokens.values()) {
       if (tk.getValue() == ch) {
@@ -46,6 +67,27 @@ public class Main {
     }
 
     throw new Exception("[line " + lineNumber +  "] Error: Unexpected character: " + ch);
+  }
+
+  static String dualTokenScanner(String str, int lineNumber) throws Exception {
+    for (DualCharTokens tk : DualCharTokens.values()) {
+      if (tk.getValue().equals(str)) {
+        return tk.getToken() + " " + tk.getValue() + " null";
+      }
+    }
+
+    throw new Exception("[line " + lineNumber +  "] Error: Unexpected character: " + str);
+  }
+
+  static Boolean checkForDualCharacterOperator(String line, int index) {
+    String tempToken = String.format("%s%s", line.charAt(index), line.charAt(index+1));
+    
+    for (DualCharTokens tk : DualCharTokens.values()) {
+      if (tempToken.equals(tk.getValue())) {
+        return true;
+      }
+    }
+    return false;
   }
   
 
@@ -76,9 +118,20 @@ public class Main {
 
       // check for lexical errors first
       while ((line = reader.readLine()) != null) {
-        for (Character ch : line.toCharArray()) {
+        for (int i=0; i<line.length(); i++) {
           try {
-            String scanned = tokenScanner(ch, lineNumber);
+
+            String scanned;
+
+            // check for DUAL_CHARACTER_OPERATORS (==, !=, <=)
+            if (i < line.length()-1 && checkForDualCharacterOperator(line, i)) {
+              String str = String.format("%s%s", line.charAt(i), line.charAt(i+1));
+              scanned = dualTokenScanner(str, lineNumber);
+              i++;  // skip another character
+            } else {
+              scanned = tokenScanner(line.charAt(i), lineNumber);
+            }
+
             validTokens.add(scanned);
           } catch (Exception err) {
             System.err.println(err.getMessage());
