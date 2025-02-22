@@ -21,7 +21,9 @@ public class Main {
     MINUS("MINUS", '-'),
     SEMICOLON("SEMICOLON", ';'),
     EQUAL("EQUAL", '='),
-    BANG("BANG", '!');
+    BANG("BANG", '!'),
+    LESS("LESS", '<'),
+    GREATER("GREATER", '>');
 
 
     private final String token;
@@ -43,7 +45,9 @@ public class Main {
   public enum DualCharTokens {
 
     EQUAL_EQUAL("EQUAL_EQUAL", "=="),
-    BANG_EQUAL("BANG_EQUAL", "!=");
+    BANG_EQUAL("BANG_EQUAL", "!="),
+    LESS_EQUAL("LESS_EQUAL", "<="),
+    GREATER_EQUAL("GREATER_EQUAL", ">=");
 
     private final String token;
     private final String value;
