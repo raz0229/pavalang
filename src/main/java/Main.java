@@ -15,7 +15,8 @@ public class Main {
     DOT("DOT", '.'),
     COMMA("COMMA", ','),
     PLUS("PLUS", '+'),
-    MINUS("MINUS", '-');
+    MINUS("MINUS", '-'),
+    SEMICOLON("SEMICOLON", ';');
 
 
     private final String token;
