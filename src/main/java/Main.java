@@ -20,7 +20,8 @@ public class Main {
     PLUS("PLUS", '+'),
     MINUS("MINUS", '-'),
     SEMICOLON("SEMICOLON", ';'),
-    EQUAL("EQUAL", '=');
+    EQUAL("EQUAL", '='),
+    BANG("BANG", '!');
 
 
     private final String token;
@@ -41,7 +42,8 @@ public class Main {
 
   public enum DualCharTokens {
 
-    EQUAL_EQUAL("EQUAL_EQUAL", "==");
+    EQUAL_EQUAL("EQUAL_EQUAL", "=="),
+    BANG_EQUAL("BANG_EQUAL", "!=");
 
     private final String token;
     private final String value;
