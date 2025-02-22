@@ -10,8 +10,14 @@ public class Main {
     LEFT_PAREN("LEFT_PAREN", '('),
     RIGHT_PAREN("RIGHT_PAREN", ')'),
     LEFT_BRACE("LEFT_BRACE", '{'),
-    RIGHT_BRACE("RIGHT_BRACE", '}');
-  
+    RIGHT_BRACE("RIGHT_BRACE", '}'),
+    STAR("STAR", '*'),
+    DOT("DOT", '.'),
+    COMMA("COMMA", ','),
+    PLUS("PLUS", '+'),
+    MINUS("MINUS", '-');
+
+
     private final String token;
     private final Character value;
   
@@ -29,15 +35,10 @@ public class Main {
   }
 
   static String tokenScanner(Character ch) {
-    switch (ch) {
-      case '(':
-        return Tokens.LEFT_PAREN.getToken() + " " + Tokens.LEFT_PAREN.getValue() + " null";
-      case ')':
-        return Tokens.RIGHT_PAREN.getToken() + " " + Tokens.RIGHT_PAREN.getValue() + " null";
-      case '{':
-        return Tokens.LEFT_BRACE.getToken() + " " + Tokens.LEFT_BRACE.getValue() + " null";
-        case '}':
-        return Tokens.RIGHT_BRACE.getToken() + " " + Tokens.RIGHT_BRACE.getValue() + " null";
+    for (Tokens tk : Tokens.values()) {
+      if (tk.getValue() == ch) {
+        return tk.getToken() + " " + tk.getValue() + " null";
+      }
     }
 
     return "EOF null";
