@@ -23,7 +23,8 @@ public class Main {
     EQUAL("EQUAL", '='),
     BANG("BANG", '!'),
     LESS("LESS", '<'),
-    GREATER("GREATER", '>');
+    GREATER("GREATER", '>'),
+    SLASH("SLASH", '/');
 
 
     private final String token;
@@ -47,7 +48,8 @@ public class Main {
     EQUAL_EQUAL("EQUAL_EQUAL", "=="),
     BANG_EQUAL("BANG_EQUAL", "!="),
     LESS_EQUAL("LESS_EQUAL", "<="),
-    GREATER_EQUAL("GREATER_EQUAL", ">=");
+    GREATER_EQUAL("GREATER_EQUAL", ">="),
+    COMMENT("COMMENT", "//");
 
     private final String token;
     private final String value;
@@ -132,13 +134,19 @@ public class Main {
             // check for DUAL_CHARACTER_OPERATORS (==, !=, <=)
             if (i < line.length()-1 && checkForDualCharacterOperator(line, i)) {
               String str = String.format("%s%s", line.charAt(i), line.charAt(i+1));
-              scanned = dualTokenScanner(str, lineNumber);
-              i++;  // skip another character
+              if (str.equals("//")) {
+                i = line.length(); // skip for comment
+              } else {
+                scanned = dualTokenScanner(str, lineNumber);
+                i++;  // skip another character
+                validTokens.add(scanned);
+              }
             } else {
               scanned = tokenScanner(line.charAt(i), lineNumber);
+              validTokens.add(scanned);
             }
 
-            validTokens.add(scanned);
+            
           } catch (Exception err) {
             System.err.println(err.getMessage());
             errorCode = 65;
