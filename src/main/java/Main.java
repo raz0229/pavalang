@@ -2,7 +2,48 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+
 public class Main {
+
+  public enum Tokens {
+    
+    LEFT_PAREN("LEFT_PAREN", '('),
+    RIGHT_PAREN("RIGHT_PAREN", ')'),
+    LEFT_BRACE("LEFT_BRACE", '{'),
+    RIGHT_BRACE("RIGHT_BRACE", '}');
+  
+    private final String token;
+    private final Character value;
+  
+    Tokens(String token, Character value) {
+      this.token = token;
+      this.value = value;
+    }
+
+    public String getToken() {
+      return token;
+    }
+    public Character getValue() {
+      return value;
+    }
+  }
+
+  static String tokenScanner(Character ch) {
+    switch (ch) {
+      case '(':
+        return Tokens.LEFT_PAREN.getToken() + " " + Tokens.LEFT_PAREN.getValue() + " null";
+      case ')':
+        return Tokens.RIGHT_PAREN.getToken() + " " + Tokens.RIGHT_PAREN.getValue() + " null";
+      case '{':
+        return Tokens.LEFT_BRACE.getToken() + " " + Tokens.LEFT_BRACE.getValue() + " null";
+        case '}':
+        return Tokens.RIGHT_BRACE.getToken() + " " + Tokens.RIGHT_BRACE.getValue() + " null";
+    }
+
+    return "EOF null";
+  }
+  
+
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     //System.err.println("Logs from your program will appear here!");
@@ -33,11 +74,7 @@ public class Main {
     if (fileContents.length() > 0) {
       // throw new RuntimeException("Scanner not implemented");
       for (Character ch : fileContents.toCharArray()) {
-        if (ch == '(') {
-          System.out.println("LEFT_PAREN ( null");
-        } else if (ch == ')') {
-          System.out.println("RIGHT_PAREN ) null");
-        }
+        System.out.println(tokenScanner(ch));
       }
 
       System.out.println("EOF  null"); // Placeholder, remove this line when implementing the scanner
