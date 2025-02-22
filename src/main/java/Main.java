@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,14 +37,14 @@ public class Main {
     }
   }
 
-  static String tokenScanner(Character ch) {
+  static String tokenScanner(Character ch, int lineNumber) throws Exception {
     for (Tokens tk : Tokens.values()) {
       if (tk.getValue() == ch) {
         return tk.getToken() + " " + tk.getValue() + " null";
       }
     }
 
-    return "EOF null";
+    throw new Exception("[line " + lineNumber +  "] Error: Unexpected character: " + ch);
   }
   
 
@@ -57,31 +59,46 @@ public class Main {
 
     String command = args[0];
     String filename = args[1];
+    int errorCode = 0;
 
     if (!command.equals("tokenize")) {
       System.err.println("Unknown command: " + command);
       System.exit(1);
     }
 
-    String fileContents = "";
     try {
-      fileContents = Files.readString(Path.of(filename));
+      //fileContents = Files.readString(Path.of(filename));
+      BufferedReader reader = new BufferedReader(new FileReader(filename));
+      String line;
+      int lineNumber = 1;
+
+      while ((line = reader.readLine()) != null) {
+        // System.out.println(lineNumber + ": " + line);
+        for (Character ch : line.toCharArray()) {
+          try {
+            String scanned = tokenScanner(ch, lineNumber);
+            System.out.println(scanned);
+          } catch (Exception str) {
+            System.err.println(str);
+            errorCode = 65;
+          }
+        }
+  
+        lineNumber++;
+      }
+      
+      if (line == null)
+        System.out.println("EOF  null");
+
+      if (errorCode == 65) {
+        // Lexical error
+        System.exit(65);
+      }
+
+      
     } catch (IOException e) {
       System.err.println("Error reading file: " + e.getMessage());
       System.exit(1);
-    }
-
-    // Uncomment this block to pass the first stage
-    
-    if (fileContents.length() > 0) {
-      // throw new RuntimeException("Scanner not implemented");
-      for (Character ch : fileContents.toCharArray()) {
-        System.out.println(tokenScanner(ch));
-      }
-
-      System.out.println("EOF  null"); // Placeholder, remove this line when implementing the scanner
-    } else {
-      System.out.println("EOF  null");
     }
   }
 }
