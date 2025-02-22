@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 
 public class Main {
@@ -59,6 +60,7 @@ public class Main {
 
     String command = args[0];
     String filename = args[1];
+    ArrayList<String> validTokens = new ArrayList<String>();
     int errorCode = 0;
 
     if (!command.equals("tokenize")) {
@@ -72,20 +74,22 @@ public class Main {
       String line;
       int lineNumber = 1;
 
+      // check for lexical errors first
       while ((line = reader.readLine()) != null) {
-        // System.out.println(lineNumber + ": " + line);
         for (Character ch : line.toCharArray()) {
           try {
             String scanned = tokenScanner(ch, lineNumber);
-            System.out.println(scanned);
-          } catch (Exception str) {
-            System.err.println(str);
+            validTokens.add(scanned);
+          } catch (Exception err) {
+            System.err.println(err.getMessage());
             errorCode = 65;
           }
         }
   
         lineNumber++;
       }
+
+      validTokens.forEach(System.out::println);
       
       if (line == null)
         System.out.println("EOF  null");
