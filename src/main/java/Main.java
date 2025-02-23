@@ -6,6 +6,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 
+// Custom Unchecked Exception
+class LexicalError extends RuntimeException {
+  public LexicalError(String message) {
+      super(message);
+  }
+}
+
 public class Main {
 
   public enum Tokens {
@@ -67,24 +74,24 @@ public class Main {
     }
   }
 
-  static String tokenScanner(Character ch, int lineNumber) throws Exception {
+  static String tokenScanner(Character ch, int lineNumber) throws LexicalError {
     for (Tokens tk : Tokens.values()) {
       if (tk.getValue() == ch) {
         return tk.getToken() + " " + tk.getValue() + " null";
       }
     }
 
-    throw new Exception("[line " + lineNumber +  "] Error: Unexpected character: " + ch);
+    throw new LexicalError("[line " + lineNumber +  "] Error: Unexpected character: " + ch);
   }
 
-  static String dualTokenScanner(String str, int lineNumber) throws Exception {
+  static String dualTokenScanner(String str, int lineNumber) throws LexicalError {
     for (DualCharTokens tk : DualCharTokens.values()) {
       if (tk.getValue().equals(str)) {
         return tk.getToken() + " " + tk.getValue() + " null";
       }
     }
 
-    throw new Exception("[line " + lineNumber +  "] Error: Unexpected character: " + str);
+    throw new LexicalError("[line " + lineNumber +  "] Error: Unexpected character: " + str);
   }
 
   static Boolean checkForDualCharacterOperator(String line, int index) {
@@ -145,14 +152,42 @@ public class Main {
 
               // skip whitespace
               if (line.charAt(i) != '\t' && line.charAt(i) != ' ') {
-                scanned = tokenScanner(line.charAt(i), lineNumber);
-                validTokens.add(scanned);
+
+                // Special check if string literal
+                if (line.charAt(i) == '"') {
+                  // search for closing "
+                  boolean closingStringFound = false;
+                  for (int j=i+1; j<line.length(); j++) {
+                    if (line.charAt(j) == '"') {
+                      // closing " found
+                      String lexeme = line.substring(i, j+1);
+                      String literal = line.substring(i+1, j);
+
+                      validTokens.add("STRING "+ lexeme + " " + literal);
+                      closingStringFound = true;
+                      i=j;
+                      break;
+                    }
+                  }
+
+                  // lexical error if closing " is not found
+                  if (!closingStringFound) {
+                    i=line.length();  // skip unclosed string characters
+                    throw new LexicalError("[line " + lineNumber +  "] Error: Unterminated string.");
+                  }
+
+                } else {
+                  scanned = tokenScanner(line.charAt(i), lineNumber);
+                  validTokens.add(scanned);
+                }
+
+                
               }
 
             }
 
             
-          } catch (Exception err) {
+          } catch (LexicalError err) {
             System.err.println(err.getMessage());
             errorCode = 65;
           }
