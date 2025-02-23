@@ -142,8 +142,13 @@ public class Main {
                 validTokens.add(scanned);
               }
             } else {
-              scanned = tokenScanner(line.charAt(i), lineNumber);
-              validTokens.add(scanned);
+
+              // skip whitespace
+              if (line.charAt(i) != '\t' && line.charAt(i) != ' ') {
+                scanned = tokenScanner(line.charAt(i), lineNumber);
+                validTokens.add(scanned);
+              }
+
             }
 
             
