@@ -218,7 +218,7 @@ public class Main {
                   }
                   String lexeme = line.substring(i,j);
                   String literal = "null";
-                  validTokens.add("IDENTIFER " + lexeme + " " + literal);
+                  validTokens.add("IDENTIFIER " + lexeme + " " + literal);
                   i=j-1;
                 }
                 else {
