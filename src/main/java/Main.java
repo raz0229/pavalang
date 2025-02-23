@@ -109,6 +109,10 @@ public class Main {
     return ch >= '0' && ch <= '9';
   }
 
+  static Boolean isCharacterAnAlphabet(char ch) {
+    return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch == '_');
+  }
+
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     //System.err.println("Logs from your program will appear here!");
@@ -179,7 +183,9 @@ public class Main {
                     throw new LexicalError("[line " + lineNumber +  "] Error: Unterminated string.");
                   }
 
-                } else if (isCharacterANumber(line.charAt(i))) {
+                } 
+                // Special check if number literal
+                else if (isCharacterANumber(line.charAt(i))) {
                   int j=i;
                   while (j<line.length()) {
 
@@ -198,7 +204,24 @@ public class Main {
                   String literal = String.valueOf(Double.parseDouble(line.substring(i,j)));
                   validTokens.add("NUMBER " + lexeme + " " + literal);
                   i=j-1;
-                } else {
+                } 
+
+                // Special check if identifier
+                else if (isCharacterAnAlphabet(line.charAt(i))) {
+                  int j=i;
+                  while (j<line.length()) {
+
+                    if (!isCharacterAnAlphabet(line.charAt(j)))
+                      break;
+
+                    j++;
+                  }
+                  String lexeme = line.substring(i,j);
+                  String literal = "null";
+                  validTokens.add("IDENTIFER " + lexeme + " " + literal);
+                  i=j-1;
+                }
+                else {
                   scanned = tokenScanner(line.charAt(i), lineNumber);
                   validTokens.add(scanned);
                 }
