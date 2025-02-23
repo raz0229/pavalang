@@ -104,7 +104,10 @@ public class Main {
     }
     return false;
   }
-  
+
+  static Boolean isCharacterANumber(char ch) {
+    return ch >= '0' && ch <= '9';
+  }
 
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -172,10 +175,29 @@ public class Main {
 
                   // lexical error if closing " is not found
                   if (!closingStringFound) {
-                    i=line.length();  // skip unclosed string characters
+                    i=line.length();  // skip unclosed string characters on same line
                     throw new LexicalError("[line " + lineNumber +  "] Error: Unterminated string.");
                   }
 
+                } else if (isCharacterANumber(line.charAt(i))) {
+                  int j=i;
+                  while (j<line.length()) {
+
+                    if (line.charAt(j) != '.' && !isCharacterANumber(line.charAt(j)))
+                      break;
+                    
+                    // detect double dots in between numbers
+                    // if (j+1<line.length() && (line.charAt(j) == '.') && (line.charAt(j+1) == '.')) {
+                    //   i=line.length();
+                    //   throw new LexicalError("[line " + lineNumber +  "] Error: Illegal \'.\'");
+                    // }
+
+                    j++;
+                  }
+                  String lexeme = line.substring(i,j);
+                  String literal = String.valueOf(Double.parseDouble(line.substring(i,j)));
+                  validTokens.add("NUMBER " + lexeme + " " + literal);
+                  i=j-1;
                 } else {
                   scanned = tokenScanner(line.charAt(i), lineNumber);
                   validTokens.add(scanned);
