@@ -185,11 +185,12 @@ public class Main {
 
                 } 
                 // Special check if identifier
-                else if (isCharacterAnAlphabet(line.charAt(i)) || isCharacterANumber(line.charAt(i))) {
+                else if (isCharacterAnAlphabet(line.charAt(i))) {
                   int j=i;
                   while (j<line.length()) {
 
                     // identifiers can contain both numbers and alphabets
+                    // but numbers cannot begin identifiers
                     if (!isCharacterAnAlphabet(line.charAt(j)) && !(isCharacterANumber(line.charAt(j))))
                       break;
 
