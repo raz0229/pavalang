@@ -10,19 +10,20 @@ public class Parser {
         this.source = source;
     }
 
-    public String parseToken(Token tk) {
+    public Object parseToken(Token tk) {
         switch (tk.getType()) {
             case TokenType.TRUE:
-                return "true";
+                //Expr expression = Expr.Literal(45.7);
+                return new Expr.Literal(true).toString();
                 //break;
             case TokenType.FALSE:
-                return "false";
+                return new Expr.Literal(false).toString();
                 //break;
             case TokenType.NIL:
-                return "nil";
+                return new Expr.Literal("nil").toString();
                 //break;
             default:
-                return "";
+                return new Expr.Literal("").toString();
                 //break;
         }
     }

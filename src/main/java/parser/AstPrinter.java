@@ -3,7 +3,7 @@ package parser;
 import lexer.Token;
 import lexer.TokenType;
 
-class AstPrinter implements Expr.Visitor<String> {
+public class AstPrinter implements Expr.Visitor<String> {
   String print(Expr expr) {
     return expr.accept(this);
   }

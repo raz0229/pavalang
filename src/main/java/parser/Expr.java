@@ -48,6 +48,10 @@ abstract class Expr {
       return visitor.visitLiteralExpr(this);
     }
 
+    public String toString() {
+      return this.value.toString();
+    }
+
     final Object value;
   }
   static class Unary extends Expr {

@@ -9,6 +9,7 @@ import lexer.Lexer;
 import lexer.Token;
 
 import parser.Parser;
+import parser.AstPrinter;
 
 public class Main {
     public static void main(String[] args) {
@@ -62,7 +63,9 @@ public class Main {
                 if (tokens != null) {
                     tokens.forEach(token -> {
                         Parser parser = new Parser(source);
-                        String parsed = parser.parseToken(token);
+                        Object parsed = parser.parseToken(token);
+                        
+                        //Expr expression;
                         System.out.println(parsed);
                     });
                 }
