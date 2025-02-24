@@ -22,6 +22,8 @@ public class Parser {
             case TokenType.NIL:
                 return new Expr.Literal("nil").toString();
                 //break;
+            case TokenType.NUMBER:
+                return new Expr.Literal(tk.getLiteral()).toString();
             default:
                 return new Expr.Literal("").toString();
                 //break;
