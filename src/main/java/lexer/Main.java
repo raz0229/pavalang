@@ -18,7 +18,7 @@ public class Main {
 
         if (!command.equals("tokenize")) {
           System.err.println("Unknown command: " + command);
-          System.exit(1);
+          // System.exit(1);
         }    
 
         try {
