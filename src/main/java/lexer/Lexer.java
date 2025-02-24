@@ -1,8 +1,5 @@
 package lexer;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +9,7 @@ public class Lexer {
     private int start = 0;
     private int current = 0;
     private int line = 1;
+    public int errorCode = 0;
 
     public Lexer(String source) {
         this.source = source;
@@ -19,8 +17,13 @@ public class Lexer {
 
     public List<Token> scanTokens() {
         while (!isAtEnd()) {
-            start = current;
+            try {
+                start = current;
             scanToken();
+            } catch (LexicalError e) {
+                System.err.println(e.getMessage());
+                this.errorCode = 65;
+            }
         }
         tokens.add(new Token(TokenType.EOF, "", null, line));
         return tokens;
@@ -59,7 +62,7 @@ public class Lexer {
                 } else if (isAlpha(c)) {
                     identifier();
                 } else {
-                    throw new LexicalError("[Line " + line + "] Unexpected character: " + c);
+                    throw new LexicalError("[line " + line + "] Error: Unexpected character: " + c);
                 }
             }
         }
@@ -95,7 +98,7 @@ public class Lexer {
             advance();
         }
         if (isAtEnd()) {
-            throw new LexicalError("[Line " + line + "] Unterminated string.");
+            throw new LexicalError("[line " + line + "] Error: Unterminated string.");
         }
         advance();
         String value = source.substring(start + 1, current - 1);

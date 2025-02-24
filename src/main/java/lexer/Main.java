@@ -18,31 +18,36 @@ public class Main {
 
         if (!command.equals("tokenize")) {
           System.err.println("Unknown command: " + command);
-          // System.exit(1);
+          //System.exit(1);
         }    
 
         try {
-            // Read file content
-            String source = Files.readString(Path.of(filename));
-            
-            // Initialize lexer and scan tokens
-            Lexer lexer = new Lexer(source);
-            List<Token> tokens = lexer.scanTokens();
+          // Read file content
+          String source = Files.readString(Path.of(filename));
 
-            // Print tokens
-            tokens.forEach(System.out::println);
-            
-        } catch (LexicalError e) {
-            System.err.println(e.getMessage());
-            errorCode = 65;  // Lexical error
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
-            System.exit(1); // File-related error
-        }
+          // Initialize lexer
+          Lexer lexer = new Lexer(source);
 
-        // Exit with error code if a lexical error occurred
-        if (errorCode == 65) {
-            System.exit(65);
-        }
+          // Scan tokens while handling multiple errors
+          List<Token> tokens = null;
+          
+          tokens = lexer.scanTokens();
+          errorCode = lexer.errorCode;
+          
+
+          // Print valid tokens (even if an error occurred)
+          if (tokens != null) {
+              tokens.forEach(System.out::println);
+          }
+
+      } catch (IOException e) {
+          System.err.println("Error reading file: " + e.getMessage());
+          System.exit(1); // File-related error
+      }
+
+      // Ensure the program exits with the correct error code
+      if (errorCode == 65) {
+          System.exit(65);
+      }
     }
 }
