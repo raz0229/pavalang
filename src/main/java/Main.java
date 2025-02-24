@@ -74,6 +74,43 @@ public class Main {
     }
   }
 
+  public enum ReservedTokens {
+
+    // and, class, else, false, for, fun, if, nil, or, print, return, super, this, true, var, while.
+    AND("AND", "and"),
+    CLASS("CLASS", "class"),
+    ELSE("ELSE", "else"),
+    FALSE("FALSE", "false"),
+    FOR("FOR", "for"),
+    FUN("FUN", "fun"),
+    IF("IF", "if"),
+    NIL("NIL", "nil"),
+    OR("OR", "or"),
+    PRINT("PRINT", "print"),
+    RETURN("RETURN", "return"),
+    SUPER("SUPER", "super"),
+    THIS("THIS", "this"),
+    TRUE("TRUE", "true"),
+    VAR("VAR", "var"),
+    WHILE("WHILE", "while");
+    
+
+    private final String token;
+    private final String value;
+  
+    ReservedTokens(String token, String value) {
+      this.token = token;
+      this.value = value;
+    }
+
+    public String getToken() {
+      return token;
+    }
+    public String getValue() {
+      return value;
+    }
+  }
+
   static String tokenScanner(Character ch, int lineNumber) throws LexicalError {
     for (Tokens tk : Tokens.values()) {
       if (tk.getValue() == ch) {
@@ -198,7 +235,19 @@ public class Main {
                   }
                   String lexeme = line.substring(i,j);
                   String literal = "null";
-                  validTokens.add("IDENTIFIER " + lexeme + " " + literal);
+                  Boolean isReservedWord = false;
+
+                  // Scanning for reserved words
+                  for (ReservedTokens tk : ReservedTokens.values()) {
+                    if (tk.getValue().equals(lexeme)) {
+                      validTokens.add(tk.getToken() + " " + tk.getValue() + " " + literal);
+                      isReservedWord = true;
+                    }
+                  }
+                  
+                  if (!isReservedWord) {
+                    validTokens.add("IDENTIFIER " + lexeme + " " + literal);
+                  }
                   i=j-1;
                 }
 
