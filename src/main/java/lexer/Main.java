@@ -7,13 +7,19 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        if (args.length < 2 || !args[0].equals("tokenize")) {
-            System.err.println("Usage: java Main tokenize <filename>");
+        if (args.length < 2 ) {
+            System.err.println("Usage: ./your_program.sh tokenize <filename>");
             System.exit(1);
         }
 
+        String command = args[0];
         String filename = args[1];
         int errorCode = 0;  // Track lexical errors
+
+        if (!command.equals("tokenize")) {
+          System.err.println("Unknown command: " + command);
+          System.exit(1);
+        }    
 
         try {
             // Read file content

@@ -22,7 +22,7 @@ public class Lexer {
             start = current;
             scanToken();
         }
-        tokens.add(new Token(TokenType.EOF, "EOF", null, line));
+        tokens.add(new Token(TokenType.EOF, "", null, line));
         return tokens;
     }
 
