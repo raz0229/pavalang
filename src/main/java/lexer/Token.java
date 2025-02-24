@@ -2,7 +2,7 @@ package lexer;
 
 public class Token {
     private final TokenType type;
-    private final String lexeme;
+    public final String lexeme;
     private final Object literal;
     private final int line;
 
@@ -33,4 +33,6 @@ public class Token {
     public String toString() {
         return type + " " + lexeme + " " + literal;
     }
+
+    
 }
