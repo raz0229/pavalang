@@ -184,6 +184,23 @@ public class Main {
                   }
 
                 } 
+                // Special check if identifier
+                else if (isCharacterAnAlphabet(line.charAt(i)) || isCharacterANumber(line.charAt(i))) {
+                  int j=i;
+                  while (j<line.length()) {
+
+                    // identifiers can contain both numbers and alphabets
+                    if (!isCharacterAnAlphabet(line.charAt(j)) && !(isCharacterANumber(line.charAt(j))))
+                      break;
+
+                    j++;
+                  }
+                  String lexeme = line.substring(i,j);
+                  String literal = "null";
+                  validTokens.add("IDENTIFIER " + lexeme + " " + literal);
+                  i=j-1;
+                }
+
                 // Special check if number literal
                 else if (isCharacterANumber(line.charAt(i))) {
                   int j=i;
@@ -206,21 +223,7 @@ public class Main {
                   i=j-1;
                 } 
 
-                // Special check if identifier
-                else if (isCharacterAnAlphabet(line.charAt(i))) {
-                  int j=i;
-                  while (j<line.length()) {
-
-                    if (!isCharacterAnAlphabet(line.charAt(j)))
-                      break;
-
-                    j++;
-                  }
-                  String lexeme = line.substring(i,j);
-                  String literal = "null";
-                  validTokens.add("IDENTIFIER " + lexeme + " " + literal);
-                  i=j-1;
-                }
+                
                 else {
                   scanned = tokenScanner(line.charAt(i), lineNumber);
                   validTokens.add(scanned);
