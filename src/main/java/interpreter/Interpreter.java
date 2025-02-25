@@ -58,28 +58,45 @@ public class Interpreter {
             return value == (int) value ? String.valueOf((int) -value) : String.valueOf(-value);
         }
         
-        // Handle binary operations (+, -, *, /, >, >=, ==, !=)
+        // Handle binary operations (+, -, *, /, >, >=, ==, !=) with proper recursive parsing
         if (expr.startsWith("(")) {
-            String[] parts = expr.substring(1, expr.length() - 1).split(" ", 2);
-            String operator = parts[0];
-            String operands = parts[1];
+            int spaceIndex = expr.indexOf(" ", 1);
+            String operator = expr.substring(1, spaceIndex);
+            String operands = expr.substring(spaceIndex + 1, expr.length() - 1).trim();
             
-            Stack<String> stack = new Stack<>();
-            for (String token : operands.split(" ")) {
-                stack.push(evaluateExpression(token));
-            }
-            
-            return evaluateBinary(operator, stack);
+            List<String> parsedOperands = parseOperands(operands);
+            return evaluateBinary(operator, parsedOperands);
         }
         
         return expr;
     }
     
-    private String evaluateBinary(String operator, Stack<String> stack) {
-        if (stack.size() < 2) return "error";
+    private List<String> parseOperands(String operands) {
+        List<String> parsedOperands = new ArrayList<>();
+        Stack<Character> stack = new Stack<>();
+        StringBuilder current = new StringBuilder();
+
+        for (char c : operands.toCharArray()) {
+            if (c == '(') stack.push(c);
+            if (c == ')') stack.pop();
+            
+            if (c == ' ' && stack.isEmpty()) {
+                parsedOperands.add(current.toString());
+                current.setLength(0);
+            } else {
+                current.append(c);
+            }
+        }
         
-        String right = stack.pop();
-        String left = stack.pop();
+        if (current.length() > 0) parsedOperands.add(current.toString());
+        return parsedOperands;
+    }
+    
+    private String evaluateBinary(String operator, List<String> operands) {
+        if (operands.size() < 2) return "error";
+        
+        String left = evaluateExpression(operands.get(0));
+        String right = evaluateExpression(operands.get(1));
         
         switch (operator) {
             case "+": return left + right;
