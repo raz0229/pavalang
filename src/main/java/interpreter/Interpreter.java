@@ -1,7 +1,7 @@
 package interpreter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Interpreter {
@@ -38,14 +38,15 @@ public class Interpreter {
             return expr;
         }
         
-        // Handle grouped expressions
+        // Handle grouped expressions recursively
         if (expr.startsWith("(group ")) {
-            return expr.substring(7, expr.length() - 1);
+            String inner = expr.substring(7, expr.length() - 1).trim();
+            return evaluateExpression(inner);
         }
         
         // Handle unary NOT (!)
         if (expr.startsWith("(! ")) {
-            String inner = expr.substring(3, expr.length() - 1);
+            String inner = expr.substring(3, expr.length() - 1).trim();
             return evaluateExpression(inner).equals("false") ? "true" : "false";
         }
         

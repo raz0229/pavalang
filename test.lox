@@ -1,1 +1,4 @@
-false nil true
+("hello world!")
+(true)
+(10.40)
+((false))
