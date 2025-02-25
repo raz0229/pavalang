@@ -59,16 +59,11 @@ public class Main {
                 tokens = lexer.scanTokens();
                 errorCode = lexer.errorCode;
                 
-                // Parse each scanned token individually
-                if (tokens != null) {
-                    tokens.forEach(token -> {
-                        Parser parser = new Parser(source);
-                        Object parsed = parser.parseToken(token);
-                        
-                        //Expr expression;
-                        System.out.print(parsed);
-                    });
-                }
+                Parser parser = new Parser(tokens);
+                String expression = parser.parse();
+
+                // Step 3: Print the parsed expression (debugging purposes)
+                System.out.println(expression);
 
 
             } catch (IOException err) {
