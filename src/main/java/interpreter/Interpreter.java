@@ -51,13 +51,6 @@ public class Interpreter {
             return (evaluated.equals("false") || evaluated.equals("nil")) ? "true" : "false";
         }
         
-        // Handle unary negation (-) and avoid binary e.g: (- 7.0 5.0)
-        if (expr.startsWith("(- ") && expr.split("\\s+").length == 2) {
-            String inner = expr.substring(3, expr.length() - 1).trim();
-            double value = Double.parseDouble(evaluateExpression(inner));
-            System.out.println("value: " + value);
-            return value == (int) value ? String.valueOf((int) -value) : String.valueOf(-value);
-        }
         
         // Handle binary operations (+, -, *, /, >, >=, ==, !=) with proper recursive parsing
         if (expr.startsWith("(")) {
@@ -66,7 +59,17 @@ public class Interpreter {
             String operands = expr.substring(spaceIndex + 1, expr.length() - 1).trim();
             
             List<String> parsedOperands = parseOperands(operands);
-            return evaluateBinary(operator, parsedOperands);
+
+            // if check to avoid unary operands like "(- (group 1.0))" that might accidentally wander here but actually need to go to the next if check
+            if (parsedOperands.size() != 1)
+                return evaluateBinary(operator, parsedOperands);
+        }
+
+        // Handle unary negation (-) and avoid binary e.g (- 7.0 5.0)
+        if (expr.startsWith("(- ")) {
+            String inner = expr.substring(3, expr.length() - 1).trim();
+            double value = Double.parseDouble(evaluateExpression(inner));
+            return value == (int) value ? String.valueOf((int) -value) : String.valueOf(-value);
         }
         
         return expr;
@@ -100,6 +103,8 @@ public class Interpreter {
         
         String left = evaluateExpression(operands.get(0));
         String right = evaluateExpression(operands.get(1));
+        // System.out.println("left: " + left);
+        // System.out.println("Right: " + right);
         
         try {
             double leftNum = Double.parseDouble(left);
@@ -129,7 +134,7 @@ public class Interpreter {
             if (operator.equals("+")) {
                 return left + right;
             } else {
-                return "error";
+                return e.getMessage();
             }
         }
         
