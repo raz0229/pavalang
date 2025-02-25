@@ -66,7 +66,7 @@ public class Main {
                         Object parsed = parser.parseToken(token);
                         
                         //Expr expression;
-                        System.out.println(parsed);
+                        System.out.print(parsed);
                     });
                 }
 

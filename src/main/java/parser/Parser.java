@@ -26,6 +26,12 @@ public class Parser {
             case TokenType.STRING:
                 return new Expr.Literal(tk.getLiteral()).toString();
             
+            case TokenType.LEFT_PAREN:
+                return new Expr.Literal("(").toString() + "group ";
+            case TokenType.RIGHT_PAREN:
+                return new Expr.Literal(")").toString();
+                
+
             default:
                 return new Expr.Literal("").toString();
                 //break;
