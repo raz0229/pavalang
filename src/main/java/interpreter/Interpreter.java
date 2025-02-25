@@ -53,7 +53,8 @@ public class Interpreter {
         // Handle unary negation (-)
         if (expr.startsWith("(- ")) {
             String inner = expr.substring(3, expr.length() - 1).trim();
-            return String.valueOf(-Double.parseDouble(evaluateExpression(inner)));
+            double value = Double.parseDouble(evaluateExpression(inner));
+            return value == (int) value ? String.valueOf((int) -value) : String.valueOf(-value);
         }
         
         // Handle binary operations (+, -, *, /, >, >=, ==, !=)
@@ -81,9 +82,18 @@ public class Interpreter {
         
         switch (operator) {
             case "+": return left + right;
-            case "-": return String.valueOf(Double.parseDouble(left) - Double.parseDouble(right));
-            case "*": return String.valueOf(Double.parseDouble(left) * Double.parseDouble(right));
-            case "/": return String.valueOf(Double.parseDouble(left) / Double.parseDouble(right));
+            case "-": {
+                double result = Double.parseDouble(left) - Double.parseDouble(right);
+                return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+            }
+            case "*": {
+                double result = Double.parseDouble(left) * Double.parseDouble(right);
+                return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+            }
+            case "/": {
+                double result = Double.parseDouble(left) / Double.parseDouble(right);
+                return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+            }
             case "==": return left.equals(right) ? "true" : "false";
             case "!=": return !left.equals(right) ? "true" : "false";
             case ">": return Double.parseDouble(left) > Double.parseDouble(right) ? "true" : "false";
