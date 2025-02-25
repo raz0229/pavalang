@@ -127,6 +127,8 @@ public class Interpreter {
                 }
                 case ">": return leftNum > rightNum ? "true" : "false";
                 case ">=": return leftNum >= rightNum ? "true" : "false";
+                case "<": return leftNum < rightNum ? "true" : "false";
+                case "<=": return leftNum <= rightNum ? "true" : "false";
             }
         } catch (NumberFormatException e) {
             if (operator.equals("+")) {
