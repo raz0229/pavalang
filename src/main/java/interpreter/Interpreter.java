@@ -103,8 +103,6 @@ public class Interpreter {
         
         String left = evaluateExpression(operands.get(0));
         String right = evaluateExpression(operands.get(1));
-        // System.out.println("left: " + left);
-        // System.out.println("Right: " + right);
         
         try {
             double leftNum = Double.parseDouble(left);
