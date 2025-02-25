@@ -28,10 +28,10 @@ public class Interpreter {
         if (expr.equals("true") || expr.equals("false") || expr.equals("nil")) {
             return expr;
         }
-        if (expr.matches("\\d+\\.0")) { // Convert 10.0 -> 10
+        if (expr.matches("-?\\d+\\.0")) { // Convert 10.0 -> 10 and -73.0 -> -73
             return expr.substring(0, expr.length() - 2);
         }
-        if (expr.matches("\\d+\\.\\d+")) { // Numeric values
+        if (expr.matches("-?\\d+\\.\\d+")) { // Numeric values
             return expr;
         }
         if (!expr.startsWith("(")) { // Simple string literal
@@ -48,6 +48,12 @@ public class Interpreter {
         if (expr.startsWith("(! ")) {
             String inner = expr.substring(3, expr.length() - 1).trim();
             return evaluateExpression(inner).equals("false") ? "true" : "false";
+        }
+        
+        // Handle unary negation (-)
+        if (expr.startsWith("(- ")) {
+            String inner = expr.substring(3, expr.length() - 1).trim();
+            return String.valueOf(-Double.parseDouble(evaluateExpression(inner)));
         }
         
         // Handle binary operations (+, -, *, /, >, >=, ==, !=)

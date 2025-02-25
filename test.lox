@@ -1,4 +1,4 @@
-("hello world!")
-(true)
-(10.40)
-((false))
+-73
+!true
+!10.40
+!((false))
