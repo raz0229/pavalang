@@ -89,7 +89,7 @@ public class Parser {
             return new Expr.Grouping(expr);
         }
 
-        throw new RuntimeException("Unexpected token: " + peek().type);
+        throw new SyntaxError("Error at: '" + peek().getLexeme() + "': Unexpected token");
     }
 
     private boolean match(TokenType... types) {

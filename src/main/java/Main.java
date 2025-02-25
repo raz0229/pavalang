@@ -9,6 +9,7 @@ import lexer.Lexer;
 import lexer.Token;
 
 import parser.Parser;
+import parser.SyntaxError;
 import parser.AstPrinter;
 
 public class Main {
@@ -66,7 +67,12 @@ public class Main {
                 System.out.println(expression);
 
 
-            } catch (IOException err) {
+            } catch(SyntaxError err) {
+                errorCode = 65;
+                System.err.println(err.getMessage());
+            } 
+            
+            catch (IOException err) {
                 System.err.println("Error reading file: " + err.getMessage());
                 System.exit(1); // File-related error
             }
