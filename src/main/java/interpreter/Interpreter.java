@@ -51,13 +51,14 @@ public class Interpreter {
             return (evaluated.equals("false") || evaluated.equals("nil")) ? "true" : "false";
         }
         
-        // Handle binary operations with proper recursive parsing
+        // Handle binary operations (+, -, *, /, >, >=, <, <=, ==, !=) with proper recursive parsing
         if (expr.startsWith("(")) {
             int spaceIndex = expr.indexOf(" ", 1);
             String operator = expr.substring(1, spaceIndex);
             String operands = expr.substring(spaceIndex + 1, expr.length() - 1).trim();
             
             List<String> parsedOperands = parseOperands(operands);
+
             if (parsedOperands.size() != 1)
                 return evaluateBinary(operator, parsedOperands);
         }
@@ -106,16 +107,16 @@ public class Interpreter {
             double rightNum = Double.parseDouble(right);
             
             switch (operator) {
-                case "+": return String.valueOf(leftNum + rightNum);
-                case "-": return String.valueOf(leftNum - rightNum);
-                case "*": return String.valueOf(leftNum * rightNum);
-                case "/": return String.valueOf(leftNum / rightNum);
+                case "+": return formatResult(leftNum + rightNum);
+                case "-": return formatResult(leftNum - rightNum);
+                case "*": return formatResult(leftNum * rightNum);
+                case "/": return formatResult(leftNum / rightNum);
                 case ">": return leftNum > rightNum ? "true" : "false";
                 case "<": return leftNum < rightNum ? "true" : "false";
                 case ">=": return leftNum >= rightNum ? "true" : "false";
                 case "<=": return leftNum <= rightNum ? "true" : "false";
-                case "==": return leftNum == rightNum ? "true" : "false";
-                case "!=": return leftNum != rightNum ? "true" : "false";
+                case "==": return "false"; // Numbers and Strings should not be equal
+                case "!=": return "true"; // Numbers and Strings are always unequal
             }
         } catch (NumberFormatException e) {
             if (operator.equals("+")) {
@@ -125,9 +126,12 @@ public class Interpreter {
             } else if (operator.equals("!=")) {
                 return !left.equals(right) ? "true" : "false";
             }
-            return "error";
         }
         
         return "error";
+    }
+    
+    private String formatResult(double result) {
+        return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
     }
 }
