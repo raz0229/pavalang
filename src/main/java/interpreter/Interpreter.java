@@ -51,21 +51,18 @@ public class Interpreter {
             return (evaluated.equals("false") || evaluated.equals("nil")) ? "true" : "false";
         }
         
-        
-        // Handle binary operations (+, -, *, /, >, >=, ==, !=) with proper recursive parsing
+        // Handle binary operations with proper recursive parsing
         if (expr.startsWith("(")) {
             int spaceIndex = expr.indexOf(" ", 1);
             String operator = expr.substring(1, spaceIndex);
             String operands = expr.substring(spaceIndex + 1, expr.length() - 1).trim();
             
             List<String> parsedOperands = parseOperands(operands);
-
-            // if check to avoid unary operands like "(- (group 1.0))" that might accidentally wander here but actually need to go to the next if check
             if (parsedOperands.size() != 1)
                 return evaluateBinary(operator, parsedOperands);
         }
 
-        // Handle unary negation (-) and avoid binary e.g (- 7.0 5.0)
+        // Handle unary negation (-)
         if (expr.startsWith("(- ")) {
             String inner = expr.substring(3, expr.length() - 1).trim();
             double value = Double.parseDouble(evaluateExpression(inner));
@@ -109,34 +106,26 @@ public class Interpreter {
             double rightNum = Double.parseDouble(right);
             
             switch (operator) {
-                case "+": {
-                    double result = leftNum + rightNum;
-                    return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
-                }
-                case "-": {
-                    double result = leftNum - rightNum;
-                    return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
-                }
-                case "*": {
-                    double result = leftNum * rightNum;
-                    return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
-                }
-                case "/": {
-                    double result = leftNum / rightNum;
-                    return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
-                }
+                case "+": return String.valueOf(leftNum + rightNum);
+                case "-": return String.valueOf(leftNum - rightNum);
+                case "*": return String.valueOf(leftNum * rightNum);
+                case "/": return String.valueOf(leftNum / rightNum);
                 case ">": return leftNum > rightNum ? "true" : "false";
-                case ">=": return leftNum >= rightNum ? "true" : "false";
                 case "<": return leftNum < rightNum ? "true" : "false";
+                case ">=": return leftNum >= rightNum ? "true" : "false";
                 case "<=": return leftNum <= rightNum ? "true" : "false";
+                case "==": return leftNum == rightNum ? "true" : "false";
+                case "!=": return leftNum != rightNum ? "true" : "false";
             }
         } catch (NumberFormatException e) {
-            switch (operator) {
-                case "+": return left + right;
-                case "==": return left.equals(right) ? "true" : "false";
-                case "!=": return !left.equals(right) ? "true" : "false";
-                default: return e.getMessage();
+            if (operator.equals("+")) {
+                return left + right;
+            } else if (operator.equals("==")) {
+                return left.equals(right) ? "true" : "false";
+            } else if (operator.equals("!=")) {
+                return !left.equals(right) ? "true" : "false";
             }
+            return "error";
         }
         
         return "error";
