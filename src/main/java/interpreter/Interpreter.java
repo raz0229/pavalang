@@ -131,10 +131,11 @@ public class Interpreter {
                 case "<=": return leftNum <= rightNum ? "true" : "false";
             }
         } catch (NumberFormatException e) {
-            if (operator.equals("+")) {
-                return left + right;
-            } else {
-                return e.getMessage();
+            switch (operator) {
+                case "+": return left + right;
+                case "==": return left.equals(right) ? "true" : "false";
+                case "!=": return !left.equals(right) ? "true" : "false";
+                default: return e.getMessage();
             }
         }
         
