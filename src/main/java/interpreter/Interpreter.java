@@ -51,10 +51,11 @@ public class Interpreter {
             return (evaluated.equals("false") || evaluated.equals("nil")) ? "true" : "false";
         }
         
-        // Handle unary negation (-)
-        if (expr.startsWith("(- ")) {
+        // Handle unary negation (-) and avoid binary e.g: (- 7.0 5.0)
+        if (expr.startsWith("(- ") && expr.split("\\s+").length == 2) {
             String inner = expr.substring(3, expr.length() - 1).trim();
             double value = Double.parseDouble(evaluateExpression(inner));
+            System.out.println("value: " + value);
             return value == (int) value ? String.valueOf((int) -value) : String.valueOf(-value);
         }
         
@@ -75,20 +76,22 @@ public class Interpreter {
         List<String> parsedOperands = new ArrayList<>();
         Stack<Character> stack = new Stack<>();
         StringBuilder current = new StringBuilder();
-
-        for (char c : operands.toCharArray()) {
+        
+        for (int i = 0; i < operands.length(); i++) {
+            char c = operands.charAt(i);
+            
             if (c == '(') stack.push(c);
             if (c == ')') stack.pop();
             
             if (c == ' ' && stack.isEmpty()) {
-                parsedOperands.add(current.toString());
+                parsedOperands.add(current.toString().trim());
                 current.setLength(0);
             } else {
                 current.append(c);
             }
         }
         
-        if (current.length() > 0) parsedOperands.add(current.toString());
+        if (current.length() > 0) parsedOperands.add(current.toString().trim());
         return parsedOperands;
     }
     
@@ -98,24 +101,36 @@ public class Interpreter {
         String left = evaluateExpression(operands.get(0));
         String right = evaluateExpression(operands.get(1));
         
-        switch (operator) {
-            case "+": return left + right;
-            case "-": {
-                double result = Double.parseDouble(left) - Double.parseDouble(right);
-                return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+        try {
+            double leftNum = Double.parseDouble(left);
+            double rightNum = Double.parseDouble(right);
+            
+            switch (operator) {
+                case "+": {
+                    double result = leftNum + rightNum;
+                    return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+                }
+                case "-": {
+                    double result = leftNum - rightNum;
+                    return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+                }
+                case "*": {
+                    double result = leftNum * rightNum;
+                    return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+                }
+                case "/": {
+                    double result = leftNum / rightNum;
+                    return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+                }
+                case ">": return leftNum > rightNum ? "true" : "false";
+                case ">=": return leftNum >= rightNum ? "true" : "false";
             }
-            case "*": {
-                double result = Double.parseDouble(left) * Double.parseDouble(right);
-                return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+        } catch (NumberFormatException e) {
+            if (operator.equals("+")) {
+                return left + right;
+            } else {
+                return "error";
             }
-            case "/": {
-                double result = Double.parseDouble(left) / Double.parseDouble(right);
-                return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
-            }
-            case "==": return left.equals(right) ? "true" : "false";
-            case "!=": return !left.equals(right) ? "true" : "false";
-            case ">": return Double.parseDouble(left) > Double.parseDouble(right) ? "true" : "false";
-            case ">=": return Double.parseDouble(left) >= Double.parseDouble(right) ? "true" : "false";
         }
         
         return "error";
