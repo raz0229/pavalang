@@ -58,7 +58,6 @@ public class Interpreter {
             String operands = expr.substring(spaceIndex + 1, expr.length() - 1).trim();
             
             List<String> parsedOperands = parseOperands(operands);
-
             if (parsedOperands.size() != 1)
                 return evaluateBinary(operator, parsedOperands);
         }
@@ -102,6 +101,28 @@ public class Interpreter {
         String left = evaluateExpression(operands.get(0));
         String right = evaluateExpression(operands.get(1));
         
+        // Handle equality operators with strict type checking.
+        if (operator.equals("==") || operator.equals("!=")) {
+            boolean leftIsNumeric = isNumeric(left);
+            boolean rightIsNumeric = isNumeric(right);
+            boolean result;
+            if (leftIsNumeric && rightIsNumeric) {
+                double leftNum = Double.parseDouble(left);
+                double rightNum = Double.parseDouble(right);
+                result = leftNum == rightNum;
+            } else if (!leftIsNumeric && !rightIsNumeric) {
+                result = left.equals(right);
+            } else {
+                // different types
+                result = false;
+            }
+            if (operator.equals("==")) {
+                return result ? "true" : "false";
+            } else { // "!="
+                return result ? "false" : "true";
+            }
+        }
+        
         try {
             double leftNum = Double.parseDouble(left);
             double rightNum = Double.parseDouble(right);
@@ -115,16 +136,10 @@ public class Interpreter {
                 case "<": return leftNum < rightNum ? "true" : "false";
                 case ">=": return leftNum >= rightNum ? "true" : "false";
                 case "<=": return leftNum <= rightNum ? "true" : "false";
-                case "==": return "false"; // Numbers and Strings should not be equal
-                case "!=": return "true"; // Numbers and Strings are always unequal
             }
         } catch (NumberFormatException e) {
             if (operator.equals("+")) {
                 return left + right;
-            } else if (operator.equals("==")) {
-                return left.equals(right) ? "true" : "false";
-            } else if (operator.equals("!=")) {
-                return !left.equals(right) ? "true" : "false";
             }
         }
         
@@ -133,5 +148,14 @@ public class Interpreter {
     
     private String formatResult(double result) {
         return result == (int) result ? String.valueOf((int) result) : String.valueOf(result);
+    }
+    
+    private boolean isNumeric(String s) {
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch(NumberFormatException e) {
+            return false;
+        }
     }
 }
