@@ -47,7 +47,8 @@ public class Interpreter {
         // Handle unary NOT (!)
         if (expr.startsWith("(! ")) {
             String inner = expr.substring(3, expr.length() - 1).trim();
-            return evaluateExpression(inner).equals("false") ? "true" : "false";
+            String evaluated = evaluateExpression(inner);
+            return (evaluated.equals("false") || evaluated.equals("nil")) ? "true" : "false";
         }
         
         // Handle unary negation (-)
