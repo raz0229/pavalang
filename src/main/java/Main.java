@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.io.IOException;
 import java.util.List;
 
+import interpreter.Interpreter;
 import lexer.Lexer;
 import lexer.Token;
 
@@ -61,10 +62,12 @@ public class Main {
                 errorCode = lexer.errorCode;
                 
                 Parser parser = new Parser(tokens);
-                String expression = parser.parse();
+                List<String> expressions = parser.parse();
 
-                // Step 3: Print the parsed expression (debugging purposes)
-                System.out.println(expression);
+                // Step 3: Print each parsed expression
+                for (String expr : expressions) {
+                    System.out.println(expr);
+                }
 
 
             } catch(SyntaxError err) {
@@ -77,7 +80,38 @@ public class Main {
                 System.exit(1); // File-related error
             }
                 break;
-        
+            
+
+            case "evaluate":
+            try {
+                String source = Files.readString(Path.of(filename));
+                Lexer lexer = new Lexer(source);
+                List<Token> tokens = null;
+                tokens = lexer.scanTokens();
+                errorCode = lexer.errorCode;
+                Parser parser = new Parser(tokens);
+                List<String> expressions = parser.parse();
+
+                // Step 4: Evaluate parsed expressions
+                Interpreter interpreter = new Interpreter(expressions);
+                List<String> results = interpreter.evaluate();
+
+                // Step 5: Print evaluated results
+                for (String result : results) {
+                    System.out.println(result);
+        }
+
+
+            } catch(SyntaxError err) {
+                errorCode = 65;
+                System.err.println(err.getMessage());
+            } 
+            
+            catch (IOException err) {
+                System.err.println("Error reading file: " + err.getMessage());
+                System.exit(1); // File-related error
+            }
+                break;
             default:
                 System.err.println("Unknown command: " + command);
                 //System.exit(1);

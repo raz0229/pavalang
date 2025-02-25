@@ -1,5 +1,6 @@
 package parser;
 
+import java.util.ArrayList;
 import java.util.List;
 import lexer.Token;
 import lexer.TokenType;
@@ -16,8 +17,14 @@ public class Parser {
     //     return expression();
     // }
 
-    public String parse() {
-        return new AstPrinter().print(expression());
+    public List<String> parse() {
+        List<String> expressions = new ArrayList<>();
+
+        while (!isAtEnd()) {
+            expressions.add(new AstPrinter().print(expression())); // Keep parsing expressions until EOF
+        }
+
+        return expressions;
     }
 
     private Expr expression() {
