@@ -46,6 +46,7 @@ public class Interpreter {
 
     // The boolean flag "preserveWhiteSpace" is used here as a marker for string operations.
     private String evaluateExpression(String expr, boolean preserveWhiteSpace) {
+        
         if (!preserveWhiteSpace)
             expr = expr.trim();
 
@@ -110,10 +111,12 @@ public class Interpreter {
         if (expr.startsWith("(- ")) {
             String inner = expr.substring(3, expr.length() - 1).trim();
             double value = Double.parseDouble(evaluateExpression(inner, preserveWhiteSpace));
+            System.out.println("handle unary");
             return value == (int) value ? String.valueOf((int) -value) : String.valueOf(-value);
         }
         
         return expr;
+        
     }
     
     private List<String> parseOperands(String operands) {
@@ -200,6 +203,10 @@ public class Interpreter {
             }
         }
         
+        // handle errors here
+        if (operator.equals("-")) {
+            throw new RuntimeException(operands + ": Expected operand type followed by \'-\' to be: NUMBER");
+        }
         return "error";
     }
     

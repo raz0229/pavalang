@@ -105,7 +105,10 @@ public class Main {
             } catch(SyntaxError err) {
                 errorCode = 65;
                 System.err.println(err.getMessage());
-            } 
+            } catch(RuntimeException re) {
+                errorCode = 70;
+                System.err.println("[ERROR] "+re.getMessage());
+            }
             
             catch (IOException err) {
                 System.err.println("Error reading file: " + err.getMessage());
