@@ -1,4 +1,1 @@
-"foo" * 42	//Operands must be numbers.
-true / 2	//Operands must be numbers.
-("foo" * "bar")	//Operands must be numbers.
-false / true	//Operands must be numbers.
+4 + 4

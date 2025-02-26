@@ -94,12 +94,18 @@ public class Interpreter {
            // If-block would run only for string concat
            // since character " appears more than two times
            // for parsed string concat
+   
             if (countOccurrences(operands, '\"') > 2) {
                 parsedOperands = extractQuotedStrings(operands);
                 isString = true;
             } else {
                 parsedOperands = parseOperands(operands);
+                
+                // prevent "foo" + false, "1" + 1
+                if (operands.contains("\""))
+                    parsedOperands = null;
             }
+            
 
             
 
@@ -203,11 +209,7 @@ public class Interpreter {
         }
         
         // handle errors here
-        //System.out.println(operator);
-        //if (operator.equals("-") || operator.equals("*") || operator.equals("/")) 
         throw new RuntimeException(operands + ": Expected operand type followed by \'-\' to be: NUMBER");
-        
-        //return "error";
     }
     
     private String formatResult(double result) {
