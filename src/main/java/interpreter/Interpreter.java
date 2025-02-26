@@ -204,10 +204,10 @@ public class Interpreter {
         
         // handle errors here
         //System.out.println(operator);
-        if (operator.equals("-") || operator.equals("*") || operator.equals("/")) {
-            throw new RuntimeException(operands + ": Expected operand type followed by \'-\' to be: NUMBER");
-        }
-        return "error";
+        //if (operator.equals("-") || operator.equals("*") || operator.equals("/")) 
+        throw new RuntimeException(operands + ": Expected operand type followed by \'-\' to be: NUMBER");
+        
+        //return "error";
     }
     
     private String formatResult(double result) {
