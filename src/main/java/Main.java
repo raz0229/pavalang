@@ -64,9 +64,9 @@ public class Main {
                 Parser parser = new Parser(tokens);
                 List<String> expressions = parser.parse();
 
-                // Step 3: Print each parsed expression
                 for (String expr : expressions) {
-                    System.out.println(expr);
+                    // remove quotes to match test cases
+                    System.out.println(expr.replaceAll("\"", ""));
                 }
 
 
@@ -98,7 +98,7 @@ public class Main {
 
                 // Step 5: Print evaluated results
                 for (String result : results) {
-                    System.out.println(result);
+                    System.out.println(result.replaceAll("\"", ""));
         }
 
 

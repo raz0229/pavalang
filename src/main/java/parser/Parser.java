@@ -53,8 +53,13 @@ public class Parser {
         return expr;
     }
 
+    // Updated term() to prevent arithmetic on booleans (even if wrapped in groupings)
     private Expr term() {
         Expr expr = factor();
+
+        if (isBooleanOrNil(expr)) {
+            return expr;
+        }
 
         while (match(TokenType.PLUS, TokenType.MINUS)) {
             Token operator = previous();
@@ -88,7 +93,10 @@ public class Parser {
         if (match(TokenType.TRUE)) return new Expr.Literal(true);
         if (match(TokenType.FALSE)) return new Expr.Literal(false);
         if (match(TokenType.NIL)) return new Expr.Literal(null);
-        if (match(TokenType.NUMBER, TokenType.STRING)) return new Expr.Literal(previous().literal);
+        if (match(TokenType.NUMBER)) return new Expr.Literal(previous().literal);
+        if (match(TokenType.STRING)) 
+            // Wrap the string literal in double quotes.
+            return new Expr.Literal("\"" + previous().literal + "\"");
 
         if (match(TokenType.LEFT_PAREN)) {
             Expr expr = expression();
@@ -134,5 +142,16 @@ public class Parser {
     private Token consume(TokenType type, String message) {
         if (check(type)) return advance();
         throw new RuntimeException(message);
+    }
+
+    // New helper: returns true if the expression (or its inner grouping) is a boolean or nil literal.
+    private boolean isBooleanOrNil(Expr expr) {
+        if (expr instanceof Expr.Literal) {
+            Object value = ((Expr.Literal) expr).value;
+            return (value instanceof Boolean || value == null);
+        } else if (expr instanceof Expr.Grouping) {
+            return isBooleanOrNil(((Expr.Grouping) expr).expression);
+        }
+        return false;
     }
 }

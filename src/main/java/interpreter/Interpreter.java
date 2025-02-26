@@ -3,9 +3,22 @@ package interpreter;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.regex.*;
 
 public class Interpreter {
     private final List<String> expressions;
+
+    private List<String> extractQuotedStrings(String input) {
+        List<String> result = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\"([^\"]*)\"");
+        Matcher matcher = pattern.matcher(input);
+        
+        while (matcher.find()) {
+            result.add(matcher.group(1)); // Extract content inside quotes
+        }
+        
+        return result;
+    }
 
     public Interpreter(List<String> expressions) {
         this.expressions = expressions;
@@ -15,14 +28,16 @@ public class Interpreter {
         List<String> results = new ArrayList<>();
         
         for (String expression : expressions) {
-            results.add(evaluateExpression(expression));
+            results.add(evaluateExpression(expression, false));
         }
         
         return results;
     }
 
-    private String evaluateExpression(String expr) {
-        expr = expr.trim();
+    // The boolean flag "preserveWhiteSpace" is used here as a marker for string operations.
+    private String evaluateExpression(String expr, boolean preserveWhiteSpace) {
+        if (!preserveWhiteSpace)
+            expr = expr.trim();
         
         // Handle literals (boolean, nil, numbers, and strings)
         if (expr.equals("true") || expr.equals("false") || expr.equals("nil")) {
@@ -41,13 +56,13 @@ public class Interpreter {
         // Handle grouped expressions recursively
         if (expr.startsWith("(group ")) {
             String inner = expr.substring(7, expr.length() - 1).trim();
-            return evaluateExpression(inner);
+            return evaluateExpression(inner, preserveWhiteSpace);
         }
         
         // Handle unary NOT (!)
         if (expr.startsWith("(! ")) {
             String inner = expr.substring(3, expr.length() - 1).trim();
-            String evaluated = evaluateExpression(inner);
+            String evaluated = evaluateExpression(inner, preserveWhiteSpace);
             return (evaluated.equals("false") || evaluated.equals("nil")) ? "true" : "false";
         }
         
@@ -56,16 +71,25 @@ public class Interpreter {
             int spaceIndex = expr.indexOf(" ", 1);
             String operator = expr.substring(1, spaceIndex);
             String operands = expr.substring(spaceIndex + 1, expr.length() - 1).trim();
+            List<String> parsedOperands;
+            boolean isString = false;
             
-            List<String> parsedOperands = parseOperands(operands);
+            // Handle strings differently if quotes are present.
+            if (operands.contains("\"")) {
+                parsedOperands = extractQuotedStrings(operands);
+                isString = true;
+            } else {
+                parsedOperands = parseOperands(operands);
+            }
+
             if (parsedOperands.size() != 1)
-                return evaluateBinary(operator, parsedOperands);
+                return evaluateBinary(operator, parsedOperands, isString);
         }
 
         // Handle unary negation (-)
         if (expr.startsWith("(- ")) {
             String inner = expr.substring(3, expr.length() - 1).trim();
-            double value = Double.parseDouble(evaluateExpression(inner));
+            double value = Double.parseDouble(evaluateExpression(inner, preserveWhiteSpace));
             return value == (int) value ? String.valueOf((int) -value) : String.valueOf(-value);
         }
         
@@ -91,15 +115,27 @@ public class Interpreter {
             }
         }
         
-        if (current.length() > 0) parsedOperands.add(current.toString().trim());
+        if (current.length() > 0) {
+            parsedOperands.add(current.toString().trim());
+        }
         return parsedOperands;
     }
     
-    private String evaluateBinary(String operator, List<String> operands) {
+    // The boolean flag "preserveWhiteSpace" here indicates that we're dealing with string operands.
+    private String evaluateBinary(String operator, List<String> operands, boolean preserveWhiteSpace) {
         if (operands.size() < 2) return "error";
         
-        String left = evaluateExpression(operands.get(0));
-        String right = evaluateExpression(operands.get(1));
+        String left = evaluateExpression(operands.get(0), preserveWhiteSpace);
+        String right = evaluateExpression(operands.get(1), preserveWhiteSpace);
+
+        // If dealing with strings and the operator is "+", perform string concatenation.
+        if (preserveWhiteSpace && operator.equals("+")) {
+            String result = left;
+            for (int i = 1; i < operands.size(); i++) {
+                result += evaluateExpression(operands.get(i), preserveWhiteSpace);
+            }
+            return result;
+        }
         
         // Handle equality operators with strict type checking.
         if (operator.equals("==") || operator.equals("!=")) {
