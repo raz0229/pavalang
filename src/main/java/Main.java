@@ -123,8 +123,8 @@ public class Main {
 
         
       // Ensure the program exits with the correct error code
-      if (errorCode == 65) {
-          System.exit(65);
+      if (errorCode != 0) {
+          System.exit(errorCode);
       }
     }
 }
