@@ -111,7 +111,6 @@ public class Interpreter {
         if (expr.startsWith("(- ")) {
             String inner = expr.substring(3, expr.length() - 1).trim();
             double value = Double.parseDouble(evaluateExpression(inner, preserveWhiteSpace));
-            System.out.println("handle unary");
             return value == (int) value ? String.valueOf((int) -value) : String.valueOf(-value);
         }
         

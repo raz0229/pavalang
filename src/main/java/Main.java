@@ -117,7 +117,6 @@ public class Main {
                 break;
             default:
                 System.err.println("Unknown command: " + command);
-                //System.exit(1);
                 break;
         }
 
