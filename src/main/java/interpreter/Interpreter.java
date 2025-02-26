@@ -203,7 +203,8 @@ public class Interpreter {
         }
         
         // handle errors here
-        if (operator.equals("-")) {
+        //System.out.println(operator);
+        if (operator.equals("-") || operator.equals("*") || operator.equals("/")) {
             throw new RuntimeException(operands + ": Expected operand type followed by \'-\' to be: NUMBER");
         }
         return "error";
