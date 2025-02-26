@@ -101,9 +101,10 @@ public class Interpreter {
             } else {
                 parsedOperands = parseOperands(operands);
                 
-                // prevent "foo" + false, "1" + 1
-                if (operands.contains("\""))
-                    parsedOperands = null;
+                // TODO:
+                // prevent "foo" + false
+                //if (operands.contains("\""))
+                //    parsedOperands = null;
             }
             
 
