@@ -8,6 +8,16 @@ import java.util.regex.*;
 public class Interpreter {
     private final List<String> expressions;
 
+    private int countOccurrences(String str, char ch) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == ch) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     private List<String> extractQuotedStrings(String input) {
         List<String> result = new ArrayList<>();
         Pattern pattern = Pattern.compile("\"([^\"]*)\"");
@@ -38,6 +48,7 @@ public class Interpreter {
     private String evaluateExpression(String expr, boolean preserveWhiteSpace) {
         if (!preserveWhiteSpace)
             expr = expr.trim();
+
         
         // Handle literals (boolean, nil, numbers, and strings)
         if (expr.equals("true") || expr.equals("false") || expr.equals("nil")) {
@@ -75,12 +86,21 @@ public class Interpreter {
             boolean isString = false;
             
             // Handle strings differently if quotes are present.
-            if (operands.contains("\"")) {
+            // run else case if string and number are
+            // being compared
+           //if (operands.contains("\"")) {
+
+           // If-block would run only for string concat
+           // since character " appears more than two times
+           // for parsed string concat
+            if (countOccurrences(operands, '\"') > 2) {
                 parsedOperands = extractQuotedStrings(operands);
                 isString = true;
             } else {
                 parsedOperands = parseOperands(operands);
             }
+
+            
 
             if (parsedOperands.size() != 1)
                 return evaluateBinary(operator, parsedOperands, isString);
@@ -141,6 +161,7 @@ public class Interpreter {
         if (operator.equals("==") || operator.equals("!=")) {
             boolean leftIsNumeric = isNumeric(left);
             boolean rightIsNumeric = isNumeric(right);
+
             boolean result;
             if (leftIsNumeric && rightIsNumeric) {
                 double leftNum = Double.parseDouble(left);

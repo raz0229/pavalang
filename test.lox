@@ -29,7 +29,3 @@ nil	//nil
 "foo" != "bar"	//true
 "foo" == "foo"	//true
 61 == "61"	//false got (== 61.0 "61")
-
-
-
-//61 == "61"	//false got (== 61.0 "61")
