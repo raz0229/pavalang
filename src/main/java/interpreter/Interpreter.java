@@ -103,10 +103,16 @@ public class Interpreter {
 
                 // prevent "foo" + false
                 // prevent boolean arithmetic
+                //System.out.println("else case ran: " + parsedOperands + operator);
                 for (String op : parsedOperands) {
                     if (op.equals("true") || op.equals("false") || op.equals("nil")) {
                         throw new RuntimeException(parsedOperands + ": Boolean Arithmetic not allowed");
                     }
+
+                    //prevent 53 + "65"
+                    if (operator.equals("+") && op.contains("\""))
+                        throw new RuntimeException(parsedOperands + ": Cannot add STRING and NUMBER");
+
                 }
             }
             
