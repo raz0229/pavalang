@@ -37,8 +37,18 @@ public class Evaluator {
     public List<String> evaluate() {
         List<String> results = new ArrayList<>();
         
+        // If an expression represents a print statement (its AST starts with "(print "),
+        // evaluate its inner expression, print the result, and add it to the results.
         for (String expression : expressions) {
-            results.add(evaluateExpression(expression, false));
+            if (expression.startsWith("(print ")) {
+                // Extract inner expression: remove the "(print " prefix and trailing ")"
+                String inner = expression.substring(7, expression.length() - 1).trim();
+                String value = evaluateExpression(inner, false);
+                System.out.println(value);
+                results.add(value);
+            } else {
+                results.add(evaluateExpression(expression, false));
+            }
         }
         
         return results;
@@ -46,11 +56,9 @@ public class Evaluator {
 
     // The boolean flag "preserveWhiteSpace" is used here as a marker for string operations.
     private String evaluateExpression(String expr, boolean preserveWhiteSpace) {
-        
         if (!preserveWhiteSpace)
             expr = expr.trim();
 
-        
         // Handle literals (boolean, nil, numbers, and strings)
         if (expr.equals("true") || expr.equals("false") || expr.equals("nil")) {
             return expr;
@@ -87,38 +95,22 @@ public class Evaluator {
             boolean isString = false;
             
             // Handle strings differently if quotes are present.
-            // run else case if string and number are
-            // being compared
-           //if (operands.contains("\"")) {
-
-           // If-block would run only for string concat
-           // since character " appears more than two times
-           // for parsed string concat
-   
             if (countOccurrences(operands, '\"') > 2) {
                 parsedOperands = extractQuotedStrings(operands);
                 isString = true;
             } else {
                 parsedOperands = parseOperands(operands);
 
-                // prevent "foo" + false
-                // prevent boolean arithmetic
-                //System.out.println("else case ran: " + parsedOperands + operator);
+                // Prevent boolean arithmetic or adding string and number.
                 for (String op : parsedOperands) {
                     if (op.equals("true") || op.equals("false") || op.equals("nil")) {
                         throw new RuntimeException(parsedOperands + ": Boolean Arithmetic not allowed");
                     }
-
-                    //prevent 53 + "65"
                     if (operator.equals("+") && op.contains("\""))
                         throw new RuntimeException(parsedOperands + ": Cannot add STRING and NUMBER");
-
                 }
             }
             
-
-            
-
             if (parsedOperands.size() != 1)
                 return evaluateBinary(operator, parsedOperands, isString);
         }
@@ -131,7 +123,6 @@ public class Evaluator {
         }
         
         return expr;
-        
     }
     
     private List<String> parseOperands(String operands) {
@@ -159,7 +150,7 @@ public class Evaluator {
         return parsedOperands;
     }
     
-    // The boolean flag "preserveWhiteSpace" here indicates that we're dealing with string operands.
+    // The boolean flag "preserveWhiteSpace" indicates that we're dealing with string operands.
     private String evaluateBinary(String operator, List<String> operands, boolean preserveWhiteSpace) {
         if (operands.size() < 2) return "error";
         
@@ -218,8 +209,7 @@ public class Evaluator {
             }
         }
         
-        // handle errors here
-        throw new RuntimeException(operands + ": Expected operand type followed by \'"+operator+"\' to be: NUMBER");
+        throw new RuntimeException(operands + ": Expected operand type followed by '" + operator + "' to be: NUMBER");
     }
     
     private String formatResult(double result) {

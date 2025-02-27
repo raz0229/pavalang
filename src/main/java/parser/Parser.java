@@ -13,11 +13,7 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    // public Expr parse() {
-    //     return expression();
-    // }
-
-    public List<String> parse() {
+    public List<String> parseStrings() {
         List<String> expressions = new ArrayList<>();
 
         while (!isAtEnd()) {
@@ -25,6 +21,32 @@ public class Parser {
         }
 
         return expressions;
+    }
+
+    // Parse a series of statements.
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
+        }
+        return statements;
+    }
+
+    private Stmt statement() {
+        if (match(TokenType.PRINT)) return printStatement();
+        return expressionStatement();
+    }
+
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
     }
 
     private Expr expression() {
@@ -53,13 +75,11 @@ public class Parser {
         return expr;
     }
 
-    // Updated term() to prevent arithmetic on booleans (even if wrapped in groupings)
     private Expr term() {
         Expr expr = factor();
 
-        if (isBooleanOrNil(expr)) {
-            return expr;
-        }
+        // Prevent arithmetic on booleans/nil.
+        if (isBooleanOrNil(expr)) return expr;
 
         while (match(TokenType.PLUS, TokenType.MINUS)) {
             Token operator = previous();
@@ -94,7 +114,7 @@ public class Parser {
         if (match(TokenType.FALSE)) return new Expr.Literal(false);
         if (match(TokenType.NIL)) return new Expr.Literal(null);
         if (match(TokenType.NUMBER)) return new Expr.Literal(previous().literal);
-        if (match(TokenType.STRING)) 
+        if (match(TokenType.STRING))
             // Wrap the string literal in double quotes.
             return new Expr.Literal("\"" + previous().literal + "\"");
 
@@ -144,7 +164,7 @@ public class Parser {
         throw new RuntimeException(message);
     }
 
-    // New helper: returns true if the expression (or its inner grouping) is a boolean or nil literal.
+    // Helper to check if an expression is a boolean literal or nil.
     private boolean isBooleanOrNil(Expr expr) {
         if (expr instanceof Expr.Literal) {
             Object value = ((Expr.Literal) expr).value;

@@ -12,6 +12,9 @@ import lexer.Token;
 import parser.Parser;
 import parser.SyntaxError;
 import parser.AstPrinter;
+import parser.Stmt;
+
+import interpreter.Interpreter;
 
 public class Main {
     public static void main(String[] args) {
@@ -62,7 +65,7 @@ public class Main {
                 errorCode = lexer.errorCode;
                 
                 Parser parser = new Parser(tokens);
-                List<String> expressions = parser.parse();
+                List<String> expressions = parser.parseStrings();
 
                 for (String expr : expressions) {
                     // remove quotes to match test cases
@@ -90,7 +93,7 @@ public class Main {
                 tokens = lexer.scanTokens();
                 errorCode = lexer.errorCode;
                 Parser parser = new Parser(tokens);
-                List<String> expressions = parser.parse();
+                List<String> expressions = parser.parseStrings();
 
                 // Step 4: Evaluate parsed expressions
                 Evaluator eval = new Evaluator(expressions);
@@ -115,6 +118,36 @@ public class Main {
                 System.exit(1); // File-related error
             }
                 break;
+
+            case "run":
+            try {
+                String source = Files.readString(Path.of(filename));
+                Lexer lexer = new Lexer(source);
+                List<Token> tokens = null;
+                tokens = lexer.scanTokens();
+                errorCode = lexer.errorCode;
+                Parser parser = new Parser(tokens);
+                List<Stmt> statements = parser.parse();
+                
+                Interpreter interpreter = new Interpreter();
+                interpreter.interpret(statements);
+        
+
+
+            } catch(SyntaxError err) {
+                errorCode = 65;
+                System.err.println(err.getMessage());
+            } catch(RuntimeException re) {
+                errorCode = 70;
+                System.err.println("[ERROR] "+re.getMessage());
+            }
+            
+            catch (IOException err) {
+                System.err.println("Error reading file: " + err.getMessage());
+                System.exit(1); // File-related error
+            }
+                break;
+
             default:
                 System.err.println("Unknown command: " + command);
                 break;

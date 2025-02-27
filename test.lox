@@ -1,2 +1,9 @@
-("foo" + "bar") < 42	
+// test.pava 
+// @author: raz0229
+// I am a comment
 
+
+
+print "hello world";
+print 2 + 67;
+print true;
