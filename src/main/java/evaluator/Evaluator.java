@@ -1,11 +1,11 @@
-package interpreter;
+package evaluator;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.regex.*;
 
-public class Interpreter {
+public class Evaluator {
     private final List<String> expressions;
 
     private int countOccurrences(String str, char ch) {
@@ -30,7 +30,7 @@ public class Interpreter {
         return result;
     }
 
-    public Interpreter(List<String> expressions) {
+    public Evaluator(List<String> expressions) {
         this.expressions = expressions;
     }
 

@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.io.IOException;
 import java.util.List;
 
-import interpreter.Interpreter;
+import evaluator.Evaluator;
 import lexer.Lexer;
 import lexer.Token;
 
@@ -93,8 +93,8 @@ public class Main {
                 List<String> expressions = parser.parse();
 
                 // Step 4: Evaluate parsed expressions
-                Interpreter interpreter = new Interpreter(expressions);
-                List<String> results = interpreter.evaluate();
+                Evaluator eval = new Evaluator(expressions);
+                List<String> results = eval.evaluate();
 
                 // Step 5: Print evaluated results
                 for (String result : results) {
