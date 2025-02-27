@@ -23,7 +23,7 @@ public class Interpreter {
             @Override
             public Void visitPrintStmt(Stmt.Print stmt) {
                 Object value = evaluate(stmt.expression);
-                System.out.println(stringify(value));
+                System.out.println(stringify(value).replaceAll("\"", ""));
                 return null;
             }
             @Override

@@ -128,7 +128,7 @@ public class Main {
                 errorCode = lexer.errorCode;
                 Parser parser = new Parser(tokens);
                 List<Stmt> statements = parser.parse();
-                
+
                 Interpreter interpreter = new Interpreter();
                 interpreter.interpret(statements);
         
