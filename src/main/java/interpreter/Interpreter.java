@@ -100,11 +100,14 @@ public class Interpreter {
                 isString = true;
             } else {
                 parsedOperands = parseOperands(operands);
-                
-                // TODO:
+
                 // prevent "foo" + false
-                //if (operands.contains("\""))
-                //    parsedOperands = null;
+                // prevent boolean arithmetic
+                for (String op : parsedOperands) {
+                    if (op.equals("true") || op.equals("false") || op.equals("nil")) {
+                        throw new RuntimeException(parsedOperands + ": Boolean Arithmetic not allowed");
+                    }
+                }
             }
             
 
@@ -210,7 +213,7 @@ public class Interpreter {
         }
         
         // handle errors here
-        throw new RuntimeException(operands + ": Expected operand type followed by \'-\' to be: NUMBER");
+        throw new RuntimeException(operands + ": Expected operand type followed by \'"+operator+"\' to be: NUMBER");
     }
     
     private String formatResult(double result) {
