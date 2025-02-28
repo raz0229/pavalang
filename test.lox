@@ -1,2 +1,1 @@
-var num = "hello";
-print num; 
+(foo
