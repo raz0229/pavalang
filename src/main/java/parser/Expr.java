@@ -1,6 +1,5 @@
 package parser;
 
-import java.util.List;
 import lexer.Token;
 
 public abstract class Expr {
@@ -9,6 +8,7 @@ public abstract class Expr {
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
+    R visitVariableExpr(Variable expr); // New visitor for variables.
   }
   public static class Binary extends Expr {
     Binary(Expr left, Token operator, Expr right) {
@@ -69,5 +69,19 @@ public abstract class Expr {
     public final Expr right;
   }
 
+  public static class Variable extends Expr {
+    public final Token name;
+    public Variable(Token name) {
+        this.name = name;
+    }
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+        return visitor.visitVariableExpr(this);
+    }
+  }
+
+
   public abstract <R> R accept(Visitor<R> visitor);
 }
+
+

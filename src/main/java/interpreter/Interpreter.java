@@ -3,8 +3,11 @@ package interpreter;
 import java.util.List;
 import parser.Expr;
 import parser.Stmt;
+import lexer.Token;
 
 public class Interpreter {
+
+    private final Environment environment = new Environment();
 
     public void interpret(List<Stmt> statements) {
         try {
@@ -28,6 +31,15 @@ public class Interpreter {
             @Override
             public Void visitExpressionStmt(Stmt.Expression stmt) {
                 evaluate(stmt.expression);
+                return null;
+            }
+            @Override
+            public Void visitVarStmt(Stmt.Var stmt) {
+                Object value = null;
+                if (stmt.initializer != null) {
+                    value = evaluate(stmt.initializer);
+                }
+                environment.define(stmt.name.lexeme, value);
                 return null;
             }
         });
@@ -98,6 +110,11 @@ public class Interpreter {
                         return !isTruthy(right);
                 }
                 return null;
+            }
+
+            @Override
+            public Object visitVariableExpr(Expr.Variable expr) {
+                return environment.get(expr.name);
             }
         });
     }

@@ -1,8 +1,2 @@
-// test.pava 
-// @author: raz0229
-// I am a comment
-
-
-print "the expression below is invalid";
-49 + "baz";
-print "this should not be printed";
+var num = "hello";
+print num;
