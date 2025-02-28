@@ -171,7 +171,7 @@ public class Parser {
 
     private Token consume(TokenType type, String message) {
         if (check(type)) return advance();
-        throw new RuntimeException(message);
+        throw new SyntaxError(message);
     }
 
     // Helper to check if an expression is a boolean literal or nil.
