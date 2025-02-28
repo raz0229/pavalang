@@ -19,7 +19,6 @@ public class Parser {
         while (!isAtEnd()) {
             expressions.add(new AstPrinter().print(expression())); // Keep parsing expressions until EOF
         }
-
         return expressions;
     }
 
