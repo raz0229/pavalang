@@ -3,5 +3,6 @@
 // I am a comment
 
 
-print "79" + "baz";
-print false * (18 + 84);
+print "the expression below is invalid";
+49 + "baz";
+print "this should not be printed";

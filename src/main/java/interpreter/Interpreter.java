@@ -5,7 +5,6 @@ import parser.Expr;
 import parser.Stmt;
 
 public class Interpreter {
-    public int exit_code = 0;
 
     public void interpret(List<Stmt> statements) {
         try {
@@ -13,8 +12,8 @@ public class Interpreter {
                 execute(stmt);
             }
         } catch (RuntimeError error) {
-            System.err.println(error.getMessage());
-            exit_code = 70;
+            throw new RuntimeException(error.getMessage());
+            
         }
     }
 
