@@ -134,7 +134,7 @@ public class Parser {
             return new Expr.Grouping(expr);
         }
 
-        throw new SyntaxError("Error at: '" + peek().getLexeme() + "': Unexpected token");
+        throw new SyntaxError(peek().getLine(), "Error at: '" + peek().getLexeme() + "': Unexpected token");
     }
 
     private boolean match(TokenType... types) {
@@ -171,7 +171,7 @@ public class Parser {
 
     private Token consume(TokenType type, String message) {
         if (check(type)) return advance();
-        throw new SyntaxError(message);
+        throw new SyntaxError(peek().getLine(), message);
     }
 
     // Helper to check if an expression is a boolean literal or nil.

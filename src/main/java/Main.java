@@ -75,7 +75,7 @@ public class Main {
 
             } catch(SyntaxError err) {
                 errorCode = 65;
-                System.err.println(err.getMessage());
+                System.err.println("[Syntax Error]" + err.getMessage());
             } catch (RuntimeException err) {
                 errorCode = 70;
                 System.err.println("[ERROR] "+err.getMessage());

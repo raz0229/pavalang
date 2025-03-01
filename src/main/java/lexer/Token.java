@@ -4,7 +4,7 @@ public class Token {
     public final TokenType type;
     public final String lexeme;
     public final Object literal;
-    private final int line;
+    public final int line;
 
     public Token(TokenType type, String lexeme, Object literal, int line) {
         this.type = type;
