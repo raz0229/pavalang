@@ -306,7 +306,8 @@ public class Parser {
     }
 
     private RuntimeException error(Token token, String message) {
-        return new RuntimeException("[line " + token.line + "] " + message);
+        return new SyntaxError(peek().getLine(), message);
+        //return new RuntimeException("[line " + token.line + "] " + message);
     }
 
     // Helper to check if an expression is a boolean literal or nil.
