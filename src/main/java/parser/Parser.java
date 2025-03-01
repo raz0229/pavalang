@@ -43,6 +43,7 @@ public class Parser {
     }
 
     private Stmt forStatement() {
+        Token forToken = previous(); // Capture the 'for' token for error reporting.
         consume(TokenType.LEFT_PAREN, "Expect '(' after 'for'.");
         
         // Initializer clause.
@@ -71,7 +72,13 @@ public class Parser {
         
         // Body.
         Stmt body = statement();
+
+          // If the body is a variable declaration (and not a block), report an error.
+        if (body instanceof Stmt.Var) {
+            throw error(forToken, "For loop body must be enclosed in a block if it is a variable declaration.");
+        }
         
+        // run for as while loop (desugar it)
         // If increment exists, execute it at the end of each loop iteration.
         if (increment != null) {
             body = new Stmt.Block(Arrays.asList(
