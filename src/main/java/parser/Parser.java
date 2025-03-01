@@ -87,9 +87,9 @@ public class Parser {
         return assignment();
     }
 
-       // assignment → IDENTIFIER "=" assignment | equality ;
-       private Expr assignment() {
-        Expr expr = equality();
+    // assignment → or ( "=" assignment )?   
+    private Expr assignment() {
+        Expr expr = or();
         if (match(TokenType.EQUAL)) {
             Token equals = previous();
             Expr value = assignment(); // right-associative
@@ -98,6 +98,28 @@ public class Parser {
                 return new Expr.Assign(name, value);
             }
             throw error(equals, "Invalid assignment target.");
+        }
+        return expr;
+    }
+
+    // or → and ( "or" and )*
+    private Expr or() {
+        Expr expr = and();
+        while (match(TokenType.OR)) {
+            Token operator = previous();
+            Expr right = and();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+        return expr;
+    }
+    
+    // and → equality ( "and" equality )*
+    private Expr and() {
+        Expr expr = equality();
+        while (match(TokenType.AND)) {
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Expr.Logical(expr, operator, right);
         }
         return expr;
     }

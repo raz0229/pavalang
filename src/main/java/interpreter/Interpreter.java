@@ -150,6 +150,19 @@ public class Interpreter {
                 environment.assign(expr.name, value);
                 return value;
             }
+
+            @Override
+            public Object visitLogicalExpr(Expr.Logical expr) {
+                Object left = evaluate(expr.left);
+                if (expr.operator.lexeme.equals("or")) {
+                    if (isTruthy(left)) return left;
+                    return evaluate(expr.right);
+                } else if (expr.operator.lexeme.equals("and")) {
+                    if (!isTruthy(left)) return left;
+                    return evaluate(expr.right);
+                }
+                return null;
+            }
         });
     }
 

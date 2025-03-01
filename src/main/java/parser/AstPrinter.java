@@ -9,6 +9,11 @@ public class AstPrinter implements Expr.Visitor<String> {
   } 
 
   @Override
+  public String visitLogicalExpr(Expr.Logical expr) {
+    return expr.left + " " + expr.operator;
+  }
+
+  @Override
   public String visitBinaryExpr(Expr.Binary expr) {
     return parenthesize(expr.operator.lexeme, expr.left, expr.right);
   }

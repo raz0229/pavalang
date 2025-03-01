@@ -10,6 +10,7 @@ public abstract class Expr {
     R visitUnaryExpr(Unary expr);
     R visitVariableExpr(Variable expr); 
     R visitAssignExpr(Assign expr);
+    R visitLogicalExpr(Logical expr); 
   }
   public static class Binary extends Expr {
     Binary(Expr left, Token operator, Expr right) {
@@ -81,21 +82,37 @@ public abstract class Expr {
     }
   }
 
-      // New assignment expression: represents "a = b" where 'a' is a variable.
-      public static class Assign extends Expr {
-        public final Token name;
-        public final Expr value;
-        
-        public Assign(Token name, Expr value) {
-            this.name = name;
-            this.value = value;
-        }
-        
-        @Override
-        public <R> R accept(Visitor<R> visitor) {
-            return visitor.visitAssignExpr(this);
-        }
+  public static class Assign extends Expr {
+      public final Token name;
+      public final Expr value;
+      
+      public Assign(Token name, Expr value) {
+          this.name = name;
+          this.value = value;
+      }
+      
+      @Override
+      public <R> R accept(Visitor<R> visitor) {
+          return visitor.visitAssignExpr(this);
+      }
+  }
+
+  public static class Logical extends Expr {
+    public final Expr left;
+    public final Token operator;
+    public final Expr right;
+    
+    public Logical(Expr left, Token operator, Expr right) {
+        this.left = left;
+        this.operator = operator;
+        this.right = right;
     }
+    
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+        return visitor.visitLogicalExpr(this);
+    }
+  }
 
 
   public abstract <R> R accept(Visitor<R> visitor);
