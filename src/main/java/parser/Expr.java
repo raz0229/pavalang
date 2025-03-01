@@ -8,7 +8,8 @@ public abstract class Expr {
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
-    R visitVariableExpr(Variable expr); // New visitor for variables.
+    R visitVariableExpr(Variable expr); 
+    R visitAssignExpr(Assign expr);
   }
   public static class Binary extends Expr {
     Binary(Expr left, Token operator, Expr right) {
@@ -79,6 +80,22 @@ public abstract class Expr {
         return visitor.visitVariableExpr(this);
     }
   }
+
+      // New assignment expression: represents "a = b" where 'a' is a variable.
+      public static class Assign extends Expr {
+        public final Token name;
+        public final Expr value;
+        
+        public Assign(Token name, Expr value) {
+            this.name = name;
+            this.value = value;
+        }
+        
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitAssignExpr(this);
+        }
+    }
 
 
   public abstract <R> R accept(Visitor<R> visitor);

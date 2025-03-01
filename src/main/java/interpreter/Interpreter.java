@@ -116,6 +116,13 @@ public class Interpreter {
             public Object visitVariableExpr(Expr.Variable expr) {
                 return environment.get(expr.name);
             }
+
+            @Override
+            public Object visitAssignExpr(Expr.Assign expr) {
+                Object value = evaluate(expr.value);
+                environment.assign(expr.name, value);
+                return value;
+            }
         });
     }
 

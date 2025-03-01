@@ -60,7 +60,22 @@ public class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return assignment();
+    }
+
+       // assignment → IDENTIFIER "=" assignment | equality ;
+       private Expr assignment() {
+        Expr expr = equality();
+        if (match(TokenType.EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment(); // right-associative
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(name, value);
+            }
+            throw error(equals, "Invalid assignment target.");
+        }
+        return expr;
     }
 
     private Expr equality() {
@@ -172,6 +187,10 @@ public class Parser {
     private Token consume(TokenType type, String message) {
         if (check(type)) return advance();
         throw new SyntaxError(peek().getLine(), message);
+    }
+
+    private RuntimeException error(Token token, String message) {
+        return new RuntimeException("[line " + token.line + "] " + message);
     }
 
     // Helper to check if an expression is a boolean literal or nil.
