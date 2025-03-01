@@ -1,6 +1,4 @@
-{
-    var bar = 11;
-    var world = 11;
-    {
-        print bar + world;
+var a = false;
+if (a = true) {
+  print (a == true);
 }
