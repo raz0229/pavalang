@@ -46,15 +46,28 @@ public class Parser {
     private Stmt.Function functionDeclaration() {
         Token name = consume(TokenType.IDENTIFIER, "Expect function name.");
         consume(TokenType.LEFT_PAREN, "Expect '(' after function name.");
-        List<Token> parameters = new ArrayList<>();  // For now, only no-arg functions.
-        consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
-        // Here, block() returns a single Stmt which should be a block statement.
-        Stmt blockStmt = statement();
-        if (!(blockStmt instanceof Stmt.Block)) {
-            throw error(peek(), "Function body must be a block.");
+        List<Token> parameters = new ArrayList<>();
+        if (!check(TokenType.RIGHT_PAREN)) {
+            do {
+                if (parameters.size() >= 255) {
+                    error(peek(), "Cannot have more than 255 parameters.");
+                }
+                parameters.add(consume(TokenType.IDENTIFIER, "Expect parameter name."));
+            } while (match(TokenType.COMMA));
         }
-        List<Stmt> body = ((Stmt.Block) blockStmt).statements;
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
+        consume(TokenType.LEFT_BRACE, "Expect '{' before function body.");
+        List<Stmt> body = blockStatements(); // New helper returns List<Stmt>.
         return new Stmt.Function(name, parameters, body);
+    }
+    
+    private List<Stmt> blockStatements() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(statement());
+        }
+        consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
     }
 
     private Stmt forStatement() {

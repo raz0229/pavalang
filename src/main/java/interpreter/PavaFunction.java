@@ -2,9 +2,6 @@ package interpreter;
 
 import java.util.List;
 import parser.Stmt;
-import interpreter.Environment;
-import interpreter.Interpreter;
-import lexer.Token;
 
 public class PavaFunction implements PavaCallable {
     private final Stmt.Function declaration;
@@ -23,8 +20,9 @@ public class PavaFunction implements PavaCallable {
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         Environment environment = new Environment(closure);
-        // For each parameter (if any) bind the corresponding argument.
-        // For now, functions have no parameters.
+        for (int i = 0; i < declaration.params.size(); i++) {
+            environment.define(declaration.params.get(i).lexeme, arguments.get(i));
+        }
         interpreter.executeBlock(declaration.body, environment);
         return null;
     }
