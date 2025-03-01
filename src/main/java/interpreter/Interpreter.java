@@ -57,6 +57,13 @@ public class Interpreter {
                 }
                 return null;
             }
+            @Override
+            public Void visitWhileStmt(Stmt.While stmt) { // New: while statement.
+                while (isTruthy(evaluate(stmt.condition))) {
+                    execute(stmt.body);
+                }
+                return null;
+            }
         });
     }
 
