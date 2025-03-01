@@ -1,6 +1,7 @@
 package parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lexer.Token;
 import lexer.TokenType;
@@ -35,9 +36,62 @@ public class Parser {
         if (match(TokenType.PRINT)) return printStatement();
         if (match(TokenType.VAR)) return varDeclaration();
         if (match(TokenType.IF)) return ifStatement();  
+        if (match(TokenType.FOR)) return forStatement(); 
         if (match(TokenType.WHILE)) return whileStatement();
         if (match(TokenType.LEFT_BRACE)) return block();
         return expressionStatement();
+    }
+
+    private Stmt forStatement() {
+        consume(TokenType.LEFT_PAREN, "Expect '(' after 'for'.");
+        
+        // Initializer clause.
+        Stmt initializer;
+        if (match(TokenType.SEMICOLON)) {
+            initializer = null;
+        } else if (match(TokenType.VAR)) {
+            initializer = varDeclaration();
+        } else {
+            initializer = expressionStatement();
+        }
+        
+        // Condition clause.
+        Expr condition = null;
+        if (!check(TokenType.SEMICOLON)) {
+            condition = expression();
+        }
+        consume(TokenType.SEMICOLON, "Expect ';' after loop condition.");
+        
+        // Increment clause.
+        Expr increment = null;
+        if (!check(TokenType.RIGHT_PAREN)) {
+            increment = expression();
+        }
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.");
+        
+        // Body.
+        Stmt body = statement();
+        
+        // If increment exists, execute it at the end of each loop iteration.
+        if (increment != null) {
+            body = new Stmt.Block(Arrays.asList(
+                body,
+                new Stmt.Expression(increment)
+            ));
+        }
+        
+        // If condition is omitted, default to 'true'.
+        if (condition == null) {
+            condition = new Expr.Literal(true);
+        }
+        body = new Stmt.While(condition, body);
+        
+        // If initializer exists, wrap everything in a block.
+        if (initializer != null) {
+            body = new Stmt.Block(Arrays.asList(initializer, body));
+        }
+        
+        return body;
     }
 
     private Stmt whileStatement() {
