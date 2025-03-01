@@ -15,6 +15,8 @@ public class Interpreter {
     public Interpreter() {
         // Define native/built-in functions
         environment.define("clock", new ClockFunction());
+        environment.define("pava", new Pava()); 
+        environment.define("typeof", new TypeFunction());
     }
 
     public void interpret(List<Stmt> statements) {
@@ -72,10 +74,16 @@ public class Interpreter {
                 }
                 return null;
             }
+            @Override
+            public Void visitFunctionStmt(Stmt.Function stmt) {
+                PavaFunction function = new PavaFunction(stmt, environment);
+                environment.define(stmt.name.lexeme, function);
+                return null;
+            }
         });
     }
 
-    private void executeBlock(List<Stmt> statements, Environment newEnv) {
+    public void executeBlock(List<Stmt> statements, Environment newEnv) {
         Environment previous = environment;
         try {
             environment = newEnv;

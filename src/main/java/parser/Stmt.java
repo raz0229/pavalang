@@ -11,6 +11,7 @@ public abstract class Stmt {
         R visitBlockStmt(Block stmt);
         R visitIfStmt(If stmt);
         R visitWhileStmt(While stmt);
+        R visitFunctionStmt(Function stmt);
     }
 
     public static class Print extends Stmt {
@@ -88,6 +89,21 @@ public abstract class Stmt {
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visitWhileStmt(this);
+        }
+    }
+
+    public static class Function extends Stmt {
+        public final Token name;
+        public final List<Token> params;  // For now, empty list.
+        public final List<Stmt> body;
+        public Function(Token name, List<Token> params, List<Stmt> body) {
+            this.name = name;
+            this.params = params;
+            this.body = body;
+        }
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitFunctionStmt(this);
         }
     }
 

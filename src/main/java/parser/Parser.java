@@ -35,11 +35,26 @@ public class Parser {
     private Stmt statement() {
         if (match(TokenType.PRINT)) return printStatement();
         if (match(TokenType.VAR)) return varDeclaration();
+        if (match(TokenType.FUN)) return functionDeclaration();
         if (match(TokenType.IF)) return ifStatement();  
         if (match(TokenType.FOR)) return forStatement(); 
         if (match(TokenType.WHILE)) return whileStatement();
         if (match(TokenType.LEFT_BRACE)) return block();
         return expressionStatement();
+    }
+
+    private Stmt.Function functionDeclaration() {
+        Token name = consume(TokenType.IDENTIFIER, "Expect function name.");
+        consume(TokenType.LEFT_PAREN, "Expect '(' after function name.");
+        List<Token> parameters = new ArrayList<>();  // For now, only no-arg functions.
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
+        // Here, block() returns a single Stmt which should be a block statement.
+        Stmt blockStmt = statement();
+        if (!(blockStmt instanceof Stmt.Block)) {
+            throw error(peek(), "Function body must be a block.");
+        }
+        List<Stmt> body = ((Stmt.Block) blockStmt).statements;
+        return new Stmt.Function(name, parameters, body);
     }
 
     private Stmt forStatement() {
