@@ -1,12 +1,14 @@
 package parser;
 
 import lexer.Token;
+import java.util.List;
 
 public abstract class Stmt {
     public interface Visitor<R> {
         R visitPrintStmt(Print stmt);
         R visitExpressionStmt(Expression stmt);
         R visitVarStmt(Var stmt);
+        R visitBlockStmt(Block stmt);
     }
 
     public static class Print extends Stmt {
@@ -45,6 +47,17 @@ public abstract class Stmt {
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visitVarStmt(this);
+        }
+    }
+
+    public static class Block extends Stmt {
+        public final List<Stmt> statements;
+        public Block(List<Stmt> statements) {
+            this.statements = statements;
+        }
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitBlockStmt(this);
         }
     }
 

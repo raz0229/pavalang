@@ -1,4 +1,6 @@
-var baz = "before";
-print baz;
-var baz = "after";
-print baz;
+{
+    var bar = 11;
+    var world = 11;
+    {
+        print bar + world;
+}

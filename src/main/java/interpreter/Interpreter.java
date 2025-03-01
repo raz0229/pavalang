@@ -7,7 +7,7 @@ import lexer.Token;
 
 public class Interpreter {
 
-    private final Environment environment = new Environment();
+    private Environment environment = new Environment();
 
     public void interpret(List<Stmt> statements) {
         try {
@@ -42,7 +42,24 @@ public class Interpreter {
                 environment.define(stmt.name.lexeme, value);
                 return null;
             }
+            @Override
+            public Void visitBlockStmt(Stmt.Block stmt) {
+                executeBlock(stmt.statements, new Environment(environment));
+                return null;
+            }
         });
+    }
+
+    private void executeBlock(List<Stmt> statements, Environment newEnv) {
+        Environment previous = environment;
+        try {
+            environment = newEnv;
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            environment = previous;
+        }
     }
 
     private Object evaluate(Expr expr) {

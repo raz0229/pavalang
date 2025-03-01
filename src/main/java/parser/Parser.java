@@ -34,7 +34,17 @@ public class Parser {
     private Stmt statement() {
         if (match(TokenType.PRINT)) return printStatement();
         if (match(TokenType.VAR)) return varDeclaration();
+        if (match(TokenType.LEFT_BRACE)) return block();
         return expressionStatement();
+    }
+
+    private Stmt block() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(statement());
+        }
+        consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+        return new Stmt.Block(statements);
     }
 
     private Stmt varDeclaration() {
