@@ -11,6 +11,7 @@ public abstract class Expr {
     R visitVariableExpr(Variable expr); 
     R visitAssignExpr(Assign expr);
     R visitLogicalExpr(Logical expr); 
+    R visitCallExpr(Call expr); 
   }
   public static class Binary extends Expr {
     Binary(Expr left, Token operator, Expr right) {
@@ -113,6 +114,24 @@ public abstract class Expr {
         return visitor.visitLogicalExpr(this);
     }
   }
+
+  public static class Call extends Expr {
+    public final Expr callee;
+    public final Token paren; // The closing parenthesis.
+    public final java.util.List<Expr> arguments;
+    
+    public Call(Expr callee, Token paren, java.util.List<Expr> arguments) {
+        this.callee = callee;
+        this.paren = paren;
+        this.arguments = arguments;
+    }
+    
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+        return visitor.visitCallExpr(this);
+    }
+  }
+
 
 
   public abstract <R> R accept(Visitor<R> visitor);

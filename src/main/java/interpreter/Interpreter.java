@@ -1,13 +1,21 @@
 package interpreter;
 
 import java.util.List;
+
+import interpreter.builtins.*;
 import parser.Expr;
 import parser.Stmt;
 import lexer.Token;
+import java.util.ArrayList;
 
 public class Interpreter {
 
     private Environment environment = new Environment();
+
+    public Interpreter() {
+        // Define native/built-in functions
+        environment.define("clock", new ClockFunction());
+    }
 
     public void interpret(List<Stmt> statements) {
         try {
@@ -169,6 +177,23 @@ public class Interpreter {
                     return evaluate(expr.right);
                 }
                 return null;
+            }
+
+            @Override
+            public Object visitCallExpr(Expr.Call expr) {
+                Object callee = evaluate(expr.callee);
+                List<Object> arguments = new ArrayList<>();
+                for (Expr argument : expr.arguments) {
+                    arguments.add(evaluate(argument));
+                }
+                if (!(callee instanceof PavaCallable)) {
+                    throw new RuntimeError(expr.paren, "Can only call functions.");
+                }
+                PavaCallable function = (PavaCallable) callee;
+                if (arguments.size() != function.arity()) {
+                    throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
+                }
+                return function.call(Interpreter.this, arguments);
             }
         });
     }
