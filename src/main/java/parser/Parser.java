@@ -101,7 +101,7 @@ public class Parser {
         Stmt body = statement();
         return new Stmt.While(condition, body);
     }
-
+ 
     private Stmt ifStatement() {
         consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
         Expr condition = expression();
