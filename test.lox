@@ -1,5 +1,0 @@
-fun f() {
-  if (false) return "no"; else return "ok";
-}
-
-print f();

@@ -16,10 +16,22 @@ public class Lexer {
     }
 
     public List<Token> scanTokens() {
+        // Ignore a shebang line at the very beginning.
+        if (source.startsWith("#!")) {
+            while (!isAtEnd() && peek() != '\n') {
+                advance();
+            }
+            // Optionally, skip the newline character.
+            if (!isAtEnd()) {
+                advance();
+                line++;
+            }
+        }
+
         while (!isAtEnd()) {
             try {
                 start = current;
-            scanToken();
+                scanToken();
             } catch (LexicalError e) {
                 System.err.println(e.getMessage());
                 this.errorCode = 65;
@@ -48,12 +60,14 @@ public class Lexer {
             case '>' -> addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
             case '/' -> {
                 if (match('/')) {
-                    while (peek() != '\n' && !isAtEnd()) advance();
+                    while (peek() != '\n' && !isAtEnd())
+                        advance();
                 } else {
                     addToken(TokenType.SLASH);
                 }
             }
-            case ' ', '\r', '\t' -> {}
+            case ' ', '\r', '\t' -> {
+            }
             case '\n' -> line++;
             case '"' -> stringLiteral();
             default -> {
@@ -69,7 +83,8 @@ public class Lexer {
     }
 
     private boolean match(char expected) {
-        if (isAtEnd() || source.charAt(current) != expected) return false;
+        if (isAtEnd() || source.charAt(current) != expected)
+            return false;
         current++;
         return true;
     }
@@ -88,13 +103,15 @@ public class Lexer {
     }
 
     private char peek() {
-        if (isAtEnd()) return '\0';
+        if (isAtEnd())
+            return '\0';
         return source.charAt(current);
     }
 
     private void stringLiteral() {
         while (peek() != '"' && !isAtEnd()) {
-            if (peek() == '\n') line++;
+            if (peek() == '\n')
+                line++;
             advance();
         }
         if (isAtEnd()) {
@@ -106,21 +123,25 @@ public class Lexer {
     }
 
     private void numberLiteral() {
-        while (isDigit(peek())) advance();
+        while (isDigit(peek()))
+            advance();
         if (peek() == '.' && isDigit(peekNext())) {
             advance();
-            while (isDigit(peek())) advance();
+            while (isDigit(peek()))
+                advance();
         }
         addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
     private char peekNext() {
-        if (current + 1 >= source.length()) return '\0';
+        if (current + 1 >= source.length())
+            return '\0';
         return source.charAt(current + 1);
     }
 
     private void identifier() {
-        while (isAlphaNumeric(peek())) advance();
+        while (isAlphaNumeric(peek()))
+            advance();
         String text = source.substring(start, current);
         TokenType type = switch (text) {
             case "and" -> TokenType.AND;

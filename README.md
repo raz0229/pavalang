@@ -1,3 +1,5 @@
+# PavaLang
+
 [![progress-banner](https://backend.codecrafters.io/progress/interpreter/19692974-a950-4665-be41-9beec504e3be)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
 
 This is a starting point for Java solutions to the

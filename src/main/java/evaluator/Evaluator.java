@@ -1,5 +1,11 @@
 package evaluator;
 
+/* 
+    DO NOT USE!
+    Old implementation of Interpreter using List<String> 
+    instead of List<Stmt>
+*/
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;
