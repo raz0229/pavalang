@@ -13,13 +13,13 @@ source=("git+https://github.com/raz0229/pavalang.git")
 sha256sums=('SKIP')  # Use a proper hash if using a tarball source
 
 build() {
-  cd "$srcdir/pava"
+  cd "$srcdir/pavalang"
   # Build the project with Maven
-  mvn package
+  mvn -e -B package -Ddir="$(dirname "$0")"
 }
 
 package() {
-  cd "$srcdir/pava"
+  cd "$srcdir/pavalang"
   # Create directory for the jar
   install -d "$pkgdir/usr/lib/pava"
   # Install the jar; adjust the path to the jar if necessary.
@@ -29,6 +29,7 @@ package() {
   install -d "$pkgdir/usr/bin"
   cat << 'EOF' > "$pkgdir/usr/bin/pava"
 #!/bin/sh
+set -e
 exec java -jar /usr/lib/pava/pava.jar "$@"
 EOF
   chmod +x "$pkgdir/usr/bin/pava"
