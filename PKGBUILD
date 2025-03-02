@@ -15,7 +15,7 @@ sha256sums=('SKIP')  # Use a proper hash if using a tarball source
 build() {
   cd "$srcdir/pavalang"
   # Build the project with Maven
-  mvn -e -B package -Ddir="$(dirname "$0")"
+  mvn -e -B package
 }
 
 package() {
