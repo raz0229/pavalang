@@ -17,6 +17,8 @@ public class Interpreter {
         environment.define("clock", new ClockFunction());
         environment.define("pava", new Pava()); 
         environment.define("typeof", new TypeFunction());
+        environment.define("input", new InputFunction());
+        environment.define("err", new ErrFunction());
     }
 
     public void interpret(List<Stmt> statements) {
@@ -207,7 +209,8 @@ public class Interpreter {
                     throw new RuntimeError(expr.paren, "Can only call functions.");
                 }
                 PavaCallable function = (PavaCallable) callee;
-                if (arguments.size() != function.arity()) {
+                // Only check arity if the function reports non-negative arity.
+                if (function.arity() >= 0 && arguments.size() != function.arity()) {
                     throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
                 }
                 return function.call(Interpreter.this, arguments);

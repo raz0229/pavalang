@@ -321,7 +321,8 @@ public class Parser {
         if (match(TokenType.NUMBER)) return new Expr.Literal(previous().literal);
         if (match(TokenType.STRING))
             // Wrap the string literal in double quotes.
-            return new Expr.Literal("\"" + previous().literal + "\"");
+            //return new Expr.Literal("\"" + previous().literal + "\"");
+            return new Expr.Literal(previous().literal);
         if (match(TokenType.IDENTIFIER)) return new Expr.Variable(previous());
         if (match(TokenType.LEFT_PAREN)) {
             Expr expr = expression();
