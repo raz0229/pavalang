@@ -1,3 +1,5 @@
-fun f1() {
-  print "hello";
+fun f() {
+  if (false) return "no"; else return "ok";
 }
+
+print f();

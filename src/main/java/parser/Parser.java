@@ -40,8 +40,21 @@ public class Parser {
         if (match(TokenType.FOR)) return forStatement(); 
         if (match(TokenType.WHILE)) return whileStatement();
         if (match(TokenType.LEFT_BRACE)) return block();
+        if (match(TokenType.RETURN)) return returnStatement();
+
         return expressionStatement();
     }
+
+    private Stmt returnStatement() {
+        Token keyword = previous();
+        Expr value = null;
+        if (!check(TokenType.SEMICOLON)) {
+            value = expression();
+        }
+        consume(TokenType.SEMICOLON, "Expect ';' after return value.");
+        return new Stmt.Return(keyword, value);
+    }
+    
 
     private Stmt.Function functionDeclaration() {
         Token name = consume(TokenType.IDENTIFIER, "Expect function name.");

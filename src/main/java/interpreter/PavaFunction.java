@@ -23,8 +23,13 @@ public class PavaFunction implements PavaCallable {
         for (int i = 0; i < declaration.params.size(); i++) {
             environment.define(declaration.params.get(i).lexeme, arguments.get(i));
         }
-        interpreter.executeBlock(declaration.body, environment);
-        return null;
+        try {
+            interpreter.executeBlock(declaration.body, environment);
+        } catch (Return returnValue) {
+            return returnValue.value;
+        }
+        
+        return null;  // Default return `nil`
     }
     
     @Override
