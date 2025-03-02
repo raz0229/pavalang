@@ -95,9 +95,9 @@ public abstract class Stmt {
 
     public static class Function extends Stmt {
         public final Token name;
-        public final List<Token> params;  // For now, empty list.
+        public final List<Parameter> params;  // For now, empty list.
         public final List<Stmt> body;
-        public Function(Token name, List<Token> params, List<Stmt> body) {
+        public Function(Token name, List<Parameter> params, List<Stmt> body) {
             this.name = name;
             this.params = params;
             this.body = body;
@@ -105,6 +105,16 @@ public abstract class Stmt {
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visitFunctionStmt(this);
+        }
+
+        // Parameter class with optional default value.
+        public static class Parameter {
+            public final Token name;
+            public final Expr defaultValue; // Can be null if no default.
+            public Parameter(Token name, Expr defaultValue) {
+                this.name = name;
+                this.defaultValue = defaultValue;
+            }
         }
     }
 

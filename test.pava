@@ -1,4 +1,5 @@
-var x = " -Hello ";
-var y = "World! Haha :) ";
+fun bar(x, y=10) {
+    return x+y;
+}  
 
-print 2 + 4.90118923344657657435345345345435435345;
+print (bar(10) + 1);

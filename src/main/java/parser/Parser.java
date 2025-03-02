@@ -33,14 +33,22 @@ public class Parser {
     }
 
     private Stmt statement() {
-        if (match(TokenType.PRINT)) return printStatement();
-        if (match(TokenType.VAR)) return varDeclaration();
-        if (match(TokenType.FUN)) return functionDeclaration();
-        if (match(TokenType.IF)) return ifStatement();  
-        if (match(TokenType.FOR)) return forStatement(); 
-        if (match(TokenType.WHILE)) return whileStatement();
-        if (match(TokenType.LEFT_BRACE)) return block();
-        if (match(TokenType.RETURN)) return returnStatement();
+        if (match(TokenType.PRINT))
+            return printStatement();
+        if (match(TokenType.VAR))
+            return varDeclaration();
+        if (match(TokenType.FUN))
+            return functionDeclaration();
+        if (match(TokenType.IF))
+            return ifStatement();
+        if (match(TokenType.FOR))
+            return forStatement();
+        if (match(TokenType.WHILE))
+            return whileStatement();
+        if (match(TokenType.LEFT_BRACE))
+            return block();
+        if (match(TokenType.RETURN))
+            return returnStatement();
 
         return expressionStatement();
     }
@@ -54,26 +62,44 @@ public class Parser {
         consume(TokenType.SEMICOLON, "Expect ';' after return value.");
         return new Stmt.Return(keyword, value);
     }
-    
 
     private Stmt.Function functionDeclaration() {
         Token name = consume(TokenType.IDENTIFIER, "Expect function name.");
         consume(TokenType.LEFT_PAREN, "Expect '(' after function name.");
-        List<Token> parameters = new ArrayList<>();
+        List<Stmt.Function.Parameter> parameters = new ArrayList<>();
         if (!check(TokenType.RIGHT_PAREN)) {
             do {
-                if (parameters.size() >= 255) {
-                    error(peek(), "Cannot have more than 255 parameters.");
+                Token paramName = consume(TokenType.IDENTIFIER, "Expect parameter name.");
+                Expr defaultValue = null;
+                if (match(TokenType.EQUAL)) {
+                    defaultValue = expression();
                 }
-                parameters.add(consume(TokenType.IDENTIFIER, "Expect parameter name."));
+                parameters.add(new Stmt.Function.Parameter(paramName, defaultValue));
             } while (match(TokenType.COMMA));
         }
         consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
+        // Enforce: if any parameter has a default value, all parameters to its right
+        // must have defaults.
+        boolean foundDefaultBeforeLastParam = false;
+
+        // check upto second-last element if it has a default value
+        for (int i = 0; i < parameters.size()-1; i++) {
+            Stmt.Function.Parameter param = parameters.get(i);
+            if (param.defaultValue != null) {
+                foundDefaultBeforeLastParam = true;
+            } 
+        }
+
+        if (foundDefaultBeforeLastParam 
+            && parameters.get(parameters.size()-1).defaultValue == null) {
+            throw error(peek(), "Parameters with default values must be trailing.");
+        }
+
         consume(TokenType.LEFT_BRACE, "Expect '{' before function body.");
-        List<Stmt> body = blockStatements(); // New helper returns List<Stmt>.
+        List<Stmt> body = blockStatements(); // Helper that returns List<Stmt>.
         return new Stmt.Function(name, parameters, body);
     }
-    
+
     private List<Stmt> blockStatements() {
         List<Stmt> statements = new ArrayList<>();
         while (!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
@@ -86,7 +112,7 @@ public class Parser {
     private Stmt forStatement() {
         Token forToken = previous(); // Capture the 'for' token for error reporting.
         consume(TokenType.LEFT_PAREN, "Expect '(' after 'for'.");
-        
+
         // Initializer clause.
         Stmt initializer;
         if (match(TokenType.SEMICOLON)) {
@@ -96,49 +122,48 @@ public class Parser {
         } else {
             initializer = expressionStatement();
         }
-        
+
         // Condition clause.
         Expr condition = null;
         if (!check(TokenType.SEMICOLON)) {
             condition = expression();
         }
         consume(TokenType.SEMICOLON, "Expect ';' after loop condition.");
-        
+
         // Increment clause.
         Expr increment = null;
         if (!check(TokenType.RIGHT_PAREN)) {
             increment = expression();
         }
         consume(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.");
-        
+
         // Body.
         Stmt body = statement();
 
-          // If the body is a variable declaration (and not a block), report an error.
+        // If the body is a variable declaration (and not a block), report an error.
         if (body instanceof Stmt.Var) {
             throw error(forToken, "For loop body must be enclosed in a block if it is a variable declaration.");
         }
-        
+
         // run for as while loop (desugar it)
         // If increment exists, execute it at the end of each loop iteration.
         if (increment != null) {
             body = new Stmt.Block(Arrays.asList(
-                body,
-                new Stmt.Expression(increment)
-            ));
+                    body,
+                    new Stmt.Expression(increment)));
         }
-        
+
         // If condition is omitted, default to 'true'.
         if (condition == null) {
             condition = new Expr.Literal(true);
         }
         body = new Stmt.While(condition, body);
-        
+
         // If initializer exists, wrap everything in a block.
         if (initializer != null) {
             body = new Stmt.Block(Arrays.asList(initializer, body));
         }
-        
+
         return body;
     }
 
@@ -149,7 +174,7 @@ public class Parser {
         Stmt body = statement();
         return new Stmt.While(condition, body);
     }
- 
+
     private Stmt ifStatement() {
         consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
         Expr condition = expression();
@@ -161,7 +186,6 @@ public class Parser {
         }
         return new Stmt.If(condition, thenBranch, elseBranch);
     }
-    
 
     private Stmt block() {
         List<Stmt> statements = new ArrayList<>();
@@ -198,7 +222,7 @@ public class Parser {
         return assignment();
     }
 
-    // assignment → or ( "=" assignment )?   
+    // assignment → or ( "=" assignment )?
     private Expr assignment() {
         Expr expr = or();
         if (match(TokenType.EQUAL)) {
@@ -223,7 +247,7 @@ public class Parser {
         }
         return expr;
     }
-    
+
     // and → equality ( "and" equality )*
     private Expr and() {
         Expr expr = equality();
@@ -261,7 +285,8 @@ public class Parser {
         Expr expr = factor();
 
         // Prevent arithmetic on booleans/nil.
-        if (isBooleanOrNil(expr)) return expr;
+        if (isBooleanOrNil(expr))
+            return expr;
 
         while (match(TokenType.PLUS, TokenType.MINUS)) {
             Token operator = previous();
@@ -302,7 +327,7 @@ public class Parser {
         }
         return expr;
     }
-    
+
     private Expr finishCall(Expr callee) {
         List<Expr> arguments = new ArrayList<>();
         if (!check(TokenType.RIGHT_PAREN)) {
@@ -315,15 +340,20 @@ public class Parser {
     }
 
     private Expr primary() {
-        if (match(TokenType.TRUE)) return new Expr.Literal(true);
-        if (match(TokenType.FALSE)) return new Expr.Literal(false);
-        if (match(TokenType.NIL)) return new Expr.Literal(null);
-        if (match(TokenType.NUMBER)) return new Expr.Literal(previous().literal);
+        if (match(TokenType.TRUE))
+            return new Expr.Literal(true);
+        if (match(TokenType.FALSE))
+            return new Expr.Literal(false);
+        if (match(TokenType.NIL))
+            return new Expr.Literal(null);
+        if (match(TokenType.NUMBER))
+            return new Expr.Literal(previous().literal);
         if (match(TokenType.STRING))
             // Wrap the string literal in double quotes.
-            //return new Expr.Literal("\"" + previous().literal + "\"");
+            // return new Expr.Literal("\"" + previous().literal + "\"");
             return new Expr.Literal(previous().literal);
-        if (match(TokenType.IDENTIFIER)) return new Expr.Variable(previous());
+        if (match(TokenType.IDENTIFIER))
+            return new Expr.Variable(previous());
         if (match(TokenType.LEFT_PAREN)) {
             Expr expr = expression();
             consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
@@ -344,12 +374,14 @@ public class Parser {
     }
 
     private boolean check(TokenType type) {
-        if (isAtEnd()) return false;
+        if (isAtEnd())
+            return false;
         return peek().type == type;
     }
 
     private Token advance() {
-        if (!isAtEnd()) current++;
+        if (!isAtEnd())
+            current++;
         return previous();
     }
 
@@ -366,7 +398,8 @@ public class Parser {
     }
 
     private Token consume(TokenType type, String message) {
-        if (check(type)) return advance();
+        if (check(type))
+            return advance();
         throw new SyntaxError(peek().getLine(), message);
     }
 

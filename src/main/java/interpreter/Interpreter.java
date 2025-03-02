@@ -106,7 +106,7 @@ public class Interpreter {
         }
     }
 
-    private Object evaluate(Expr expr) {
+    public Object evaluate(Expr expr) {
         return expr.accept(new Expr.Visitor<Object>() {
             @Override
             public Object visitBinaryExpr(Expr.Binary expr) {
@@ -209,10 +209,12 @@ public class Interpreter {
                     throw new RuntimeError(expr.paren, "Can only call functions.");
                 }
                 PavaCallable function = (PavaCallable) callee;
+                
+                // Disable it for now as we introduce default values of functions
                 // Only check arity if the function reports non-negative arity.
-                if (function.arity() >= 0 && arguments.size() != function.arity()) {
-                    throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
-                }
+                // if (function.arity() >= 0 && arguments.size() != function.arity()) {
+                //     throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
+                // }
                 return function.call(Interpreter.this, arguments);
             }
         });
