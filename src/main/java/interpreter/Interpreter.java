@@ -19,6 +19,11 @@ public class Interpreter {
         environment.define("typeof", new TypeFunction());
         environment.define("input", new InputFunction());
         environment.define("err", new ErrFunction());
+        environment.define("string", new StringFunction());
+        environment.define("number", new NumberFunction());
+        environment.define("shell", new ShellFunction());
+        environment.define("length", new LengthFunction());
+        environment.define("exit", new ExitFunction());
     }
 
     public void interpret(List<Stmt> statements) {
