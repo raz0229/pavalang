@@ -1,0 +1,35 @@
+name: pavalang
+base: core22
+version: '1.0'
+summary: Pava Interpreter
+description: |
+  Pava is a simple Tree-walking interpreter built using Java that combines the syntax of Python with the goodness of Java. This snap builds the project using Maven,
+  packages the resulting JAR along with a launcher script, and ensures the required Java runtime is available.
+grade: stable
+confinement: strict
+
+parts:
+  pava:
+    # We use the "nil" plugin so we can define our custom build steps.
+    plugin: nil
+    source: .
+    build-packages:
+      - maven
+    override-build: |
+      # Clean and package the Maven project (this produces target/pava.jar).
+      mvn clean package
+      # Prepare the installation directory.
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      # Copy the built JAR and the launch script.
+      cp target/pava.jar $SNAPCRAFT_PART_INSTALL/bin/pava.jar
+      cp pava $SNAPCRAFT_PART_INSTALL/bin/pava
+      # Ensure the launch script is executable.
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/pava
+    # Include the Java runtime so the end user doesn't need to install it.
+    stage-packages:
+      - openjdk-17-jre-headless
+
+apps:
+  pava:
+    command: bin/pava
+    plugs: [network, home]

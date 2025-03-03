@@ -1,5 +1,1 @@
-fun bar(x, y=10) {
-    return x+y;
-}  
-
-print (bar(10) + 1);
+print "hello\tworld";

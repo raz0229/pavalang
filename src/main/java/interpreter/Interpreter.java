@@ -37,7 +37,7 @@ public class Interpreter {
             @Override
             public Void visitPrintStmt(Stmt.Print stmt) {
                 Object value = evaluate(stmt.expression);
-                System.out.println(stringify(value).replaceAll("\"", ""));
+                System.out.print(stringify(value));
                 return null;
             }
             @Override
@@ -249,6 +249,46 @@ public class Interpreter {
             if (text == (int) text) return String.valueOf((int) text);
             return String.valueOf(text);
         }
+        if (object instanceof String) {
+            return processEscapes((String) object);
+        }
         return object.toString();
     }
+    
+    private String processEscapes(String s) {
+        StringBuilder sb = new StringBuilder();
+        System.out.println("String build: " + s);
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\\' && i + 1 < s.length()) {
+                char next = s.charAt(i + 1);
+                switch (next) {
+                    case 'n':
+                        sb.append('\n');
+                        i++; // skip next char
+                        break;
+                    case 't':
+                        sb.append('\t');
+                        i++;
+                        break;
+                    case '"':
+                    System.out.println("\" OCCURED FOUND");
+                        sb.append('"');
+                        i++;
+                        break;
+                    case '\\':
+                        sb.append('\\');
+                        i++;
+                        break;
+                    default:
+                        sb.append(c);
+                        break;
+                }
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+    
 }
