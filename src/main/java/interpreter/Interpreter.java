@@ -24,6 +24,8 @@ public class Interpreter {
         environment.define("shell", new ShellFunction());
         environment.define("length", new LengthFunction());
         environment.define("exit", new ExitFunction());
+        environment.define("getAsciiCode", new GetAsciiCodeFunction());
+        environment.define("fromAsciiCode", new FromAsciiCodeFunction());
     }
 
     public void interpret(List<Stmt> statements) {

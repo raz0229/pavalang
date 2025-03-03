@@ -4,7 +4,7 @@ import java.util.List;
 import interpreter.*;
 import lexer.Token;
 
-public class LengthFunction implements PavaCallable {
+public class FromAsciiCodeFunction implements PavaCallable {
     @Override
     public int arity() {
         return 1;
@@ -13,10 +13,11 @@ public class LengthFunction implements PavaCallable {
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         Object arg = arguments.get(0);
-        if (arg instanceof String) {
-            return (double) ((String) arg).length();
+        if (arg instanceof Double) {
+            int code = (int) Math.round((Double) arg);
+            return Character.toString((char) code);
         }
-        throw new RuntimeError(new Token(null, "NIL", "NIL", 0), "Argument to length() must be a string.");
+        throw new RuntimeError(new Token(null, "NIL", "NIL", 0), " fromAsciiCode() expects a number.");
     }
     
     @Override

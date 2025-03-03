@@ -2,6 +2,7 @@ package interpreter.builtins;
 
 import interpreter.*;
 import java.util.List;
+import lexer.Token;
 
 public class ExitFunction implements PavaCallable {
     @Override
@@ -16,7 +17,7 @@ public class ExitFunction implements PavaCallable {
             int code = (int) Math.round((Double) arg);
             System.exit(code);
         }
-        throw new RuntimeError(null, "Argument to exit() must be a number.");
+        throw new RuntimeError(new Token(null, "NIL", "NIL", 0), "Argument to exit() must be a number.");
     }
     
     @Override

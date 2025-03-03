@@ -1,2 +1,2 @@
-exit(70);
+print fromAsciiCode(65);
 

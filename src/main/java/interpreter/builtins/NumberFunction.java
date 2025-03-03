@@ -2,6 +2,7 @@ package interpreter.builtins;
 
 import java.util.List;
 import interpreter.*;
+import lexer.Token;
 
 public class NumberFunction implements PavaCallable {
     @Override
@@ -16,10 +17,10 @@ public class NumberFunction implements PavaCallable {
             try {
                 return Double.parseDouble((String) arg);
             } catch (NumberFormatException e) {
-                throw new RuntimeError(null, "Invalid number format: " + arg);
+                throw new RuntimeError(new Token(null, "NIL", "NIL", 0), "Invalid number format: " + arg);
             }
         }
-        throw new RuntimeError(null, "Argument to number() must be a string.");
+        throw new RuntimeError(new Token(null, "NIL", "NIL", 0), "Argument to number() must be a string.");
     }
     
     @Override

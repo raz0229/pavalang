@@ -2,6 +2,7 @@ package interpreter.builtins;
 
 import java.util.List;
 import interpreter.*;
+import lexer.Token;
 
 public class StringFunction implements PavaCallable {
     @Override
@@ -15,7 +16,7 @@ public class StringFunction implements PavaCallable {
         if (arg instanceof Double) {
             return arg.toString();
         }
-        throw new RuntimeError(null, "Argument to string() must be a number.");
+        throw new RuntimeError(new Token(null, "NIL", "NIL", 0), "Argument to string() must be a number.");
     }
     
     @Override
