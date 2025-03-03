@@ -257,7 +257,6 @@ public class Interpreter {
     
     private String processEscapes(String s) {
         StringBuilder sb = new StringBuilder();
-        System.out.println("String build: " + s);
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (c == '\\' && i + 1 < s.length()) {
@@ -272,7 +271,6 @@ public class Interpreter {
                         i++;
                         break;
                     case '"':
-                    System.out.println("\" OCCURED FOUND");
                         sb.append('"');
                         i++;
                         break;
