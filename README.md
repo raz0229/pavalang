@@ -73,7 +73,9 @@ This document provides comprehensive documentation for the Pava language. Pava i
 
   
 
-Pavalang is a lightweight tree-walking interpreter designed to teach language implementation techniques. It supports dynamic typing, first-class functions, closures, and a set of built-in functionalities that allow you to build applications quickly. This documentation covers the complete syntax and built-in functionalities of Pava.
+Pavalang is a lightweight tree-walking interpreter designed to teach language implementation techniques. It supports dynamic typing, first-class functions, closures, and a set of built-in functionalities that allow you to build applications quickly. 
+Pava is written entirely in Java and is syntatically similar to Python hence, Pava.
+This documentation covers the complete syntax and built-in functionalities of Pava.
 
   
 
