@@ -1,16 +1,19 @@
 package interpreter;
 
 import java.util.List;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
 import interpreter.builtins.*;
-import parser.Expr;
-import parser.Stmt;
-import lexer.Token;
+import parser.*;
+import lexer.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Interpreter {
 
     private Environment environment = new Environment();
+    private final Map<String, Module> modules = new HashMap<>();
 
     public Interpreter() {
         // Define native/built-in functions
@@ -96,6 +99,67 @@ public class Interpreter {
                     value = evaluate(stmt.value);
                 }
                 throw new Return(value);
+            }
+            @Override
+            public Void visitImportStmt(Stmt.Import stmt) {
+                // Extract the module path (remove quotes if necessary).
+                String path = stmt.path.literal.toString();
+                if (path.startsWith("\"") && path.endsWith("\"")) {
+                    path = path.substring(1, path.length()-1);
+                }
+                // Append ".pava" if not present.
+                if (!path.endsWith(".pava")) {
+                    path = path + ".pava";
+                }
+
+                    // Attempt to find the module in /usr/share/pava first, then in the working directory.
+                java.nio.file.Path modulePath = java.nio.file.Path.of("/usr/share/pava", path);
+                if (!java.nio.file.Files.exists(modulePath)) {
+                    modulePath = java.nio.file.Path.of(path);
+                    if (!java.nio.file.Files.exists(modulePath)) {
+                        throw new RuntimeException("Module file not found: " + path);
+                    }
+                }
+
+                String modulePathStr = modulePath.toString();
+
+                // Check module cache.
+                Module module;
+                if (modules.containsKey(modulePathStr)) {
+                    module = modules.get(modulePathStr);
+                } else {
+                    try {
+                        String source = java.nio.file.Files.readString(modulePath);
+                        Lexer lexer = new Lexer(source);
+                        List<Token> tokens = lexer.scanTokens();
+                        Parser parser = new Parser(tokens);
+                        List<Stmt> moduleStatements = parser.parse();
+                        // Create a new interpreter for the module.
+                        Interpreter moduleInterpreter = new Interpreter();
+                        moduleInterpreter.interpret(moduleStatements);
+                        // Assume the module file ends with an export statement.
+                        // Retrieve the exported module name.
+                        Object exportNameObj = moduleInterpreter.environment.get(new Token(TokenType.IDENTIFIER, "__export__", null, 0));
+                        if (!(exportNameObj instanceof String)) {
+                            throw new RuntimeException("Module did not export a valid name.");
+                        }
+                        String exportName = (String) exportNameObj;
+                        // Create a Module object from the moduleInterpreter's environment.
+                        module = new Module(exportName, moduleInterpreter.environment);
+                        modules.put(path, module);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error loading module: " + e.getMessage());
+                    }
+                }
+                // Bind the module in the current environment by its exported name.
+                environment.define(module.name, module);
+                return null;
+            }
+            @Override
+            public Void visitExportStmt(Stmt.Export stmt) {
+                // When executing an export, simply store the exported module name in a special variable.
+                environment.define("__export__", stmt.name.lexeme);
+                return null;
             }
 
         });
@@ -223,6 +287,17 @@ public class Interpreter {
                 //     throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
                 // }
                 return function.call(Interpreter.this, arguments);
+            }
+            @Override
+            public Object visitGetExpr(Expr.Get expr) {
+                Object object = evaluate(expr.object);
+                if (object instanceof Module) {
+                    return ((Module)object).env.get(expr.name);
+                }
+                if (object instanceof Environment) {
+                    return ((Environment) object).get(expr.name);
+                }
+                throw new RuntimeError(expr.name, "Only modules have properties.");
             }
         });
     }

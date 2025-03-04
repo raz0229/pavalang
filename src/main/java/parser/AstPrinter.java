@@ -3,6 +3,7 @@ package parser;
 import lexer.Token;
 import lexer.TokenType;
 import parser.Expr.Call;
+import parser.Expr.Get;
 
 public class AstPrinter implements Expr.Visitor<String> {
   String print(Expr expr) {
@@ -74,5 +75,11 @@ public class AstPrinter implements Expr.Visitor<String> {
   public String visitCallExpr(Call expr) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'visitCallExpr'");
+  }
+
+  @Override
+  public String visitGetExpr(Get expr) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitGetExpr'");
   }
 }

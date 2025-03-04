@@ -1,35 +1,32 @@
 name: pavalang
-base: core22
 version: '1.0'
 summary: Pava Interpreter
 description: |
   Pava is a simple Tree-walking interpreter built using Java that combines the syntax of Python with the goodness of Java. This snap builds the project using Maven,
   packages the resulting JAR along with a launcher script, and ensures the required Java runtime is available.
-grade: stable
+base: core20
 confinement: strict
-
-parts:
-  pava:
-    # We use the "nil" plugin so we can define our custom build steps.
-    plugin: nil
-    source: .
-    build-packages:
-      - maven
-    override-build: |
-      # Clean and package the Maven project (this produces target/pava.jar).
-      mvn clean package
-      # Prepare the installation directory.
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      # Copy the built JAR and the launch script.
-      cp target/pava.jar $SNAPCRAFT_PART_INSTALL/bin/pava.jar
-      cp pava $SNAPCRAFT_PART_INSTALL/bin/pava
-      # Ensure the launch script is executable.
-      chmod +x $SNAPCRAFT_PART_INSTALL/bin/pava
-    # Include the Java runtime so the end user doesn't need to install it.
-    stage-packages:
-      - openjdk-17-jre-headless
+grade: stable
 
 apps:
   pava:
     command: bin/pava
-    plugs: [network, home]
+    plugs: [network]
+
+parts:
+  pava:
+    plugin: nil
+    source: .
+    build-packages:
+      - maven
+      - openjdk-17-jdk   # Adjust this if the package name differs in the builder environment
+    override-build: |
+      set -e
+      # Build the project using Maven
+      mvn clean package
+      # Create the destination directory for the shell script
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      # Copy the jar produced by Maven (adjust path if needed)
+      cp target/pava.jar $SNAPCRAFT_PART_INSTALL/
+      # Copy the shell script into the bin directory so it becomes the command entrypoint
+      cp pava $SNAPCRAFT_PART_INSTALL/bin/

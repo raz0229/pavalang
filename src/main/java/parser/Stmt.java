@@ -13,6 +13,8 @@ public abstract class Stmt {
         R visitWhileStmt(While stmt);
         R visitFunctionStmt(Function stmt);
         R visitReturnStmt(Return stmt);
+        R visitImportStmt(Import stmt);
+        R visitExportStmt(Export stmt);
     }
 
     public static class Print extends Stmt {
@@ -130,6 +132,28 @@ public abstract class Stmt {
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visitReturnStmt(this);
+        }
+    }
+
+    public static class Import extends Stmt {
+        public final Token path;  // The module file path (as a string literal).
+        public Import(Token path) {
+            this.path = path;
+        }
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitImportStmt(this);
+        }
+    }
+
+    public static class Export extends Stmt {
+        public final Token name; // The exported module name.
+        public Export(Token name) {
+            this.name = name;
+        }
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitExportStmt(this);
         }
     }
     

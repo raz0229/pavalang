@@ -12,6 +12,7 @@ public abstract class Expr {
     R visitAssignExpr(Assign expr);
     R visitLogicalExpr(Logical expr); 
     R visitCallExpr(Call expr); 
+    R visitGetExpr(Get expr); // For property access from module (dot operator)
   }
   public static class Binary extends Expr {
     Binary(Expr left, Token operator, Expr right) {
@@ -132,7 +133,20 @@ public abstract class Expr {
     }
   }
 
-
+  public static class Get extends Expr {
+    public final Expr object;
+    public final Token name;
+    
+    public Get(Expr object, Token name) {
+        this.object = object;
+        this.name = name;
+    }
+    
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+        return visitor.visitGetExpr(this);
+    }
+  }
 
   public abstract <R> R accept(Visitor<R> visitor);
 }

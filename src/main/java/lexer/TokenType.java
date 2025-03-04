@@ -11,7 +11,7 @@ public enum TokenType {
 
     // Reserved Keywords
     AND, CLASS, ELSE, FALSE, FOR, FUN, IF, NIL, OR, PRINT,
-    RETURN, SUPER, THIS, TRUE, VAR, WHILE,
+    RETURN, SUPER, THIS, TRUE, VAR, WHILE, IMPORT, EXPORT,
 
     // Identifiers and literals
     IDENTIFIER, STRING, NUMBER,

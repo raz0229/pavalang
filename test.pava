@@ -1,2 +1,3 @@
-print fromAsciiCode(65);
+import "module";    // searches first in /usr/share/pava and fallsback to pwd if not present
 
+print Math.addTwo();

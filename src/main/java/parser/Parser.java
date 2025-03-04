@@ -33,6 +33,8 @@ public class Parser {
     }
 
     private Stmt statement() {
+        if (match(TokenType.IMPORT)) return importStatement();
+        if (match(TokenType.EXPORT)) return exportStatement();
         if (match(TokenType.PRINT))
             return printStatement();
         if (match(TokenType.VAR))
@@ -51,6 +53,19 @@ public class Parser {
             return returnStatement();
 
         return expressionStatement();
+    }
+
+    private Stmt importStatement() {
+        // We expect a module path as a string literal.
+        Token path = consume(TokenType.STRING, "Expect module path as a string.");
+        consume(TokenType.SEMICOLON, "Expect ';' after import.");
+        return new Stmt.Import(path);
+    }
+    
+    private Stmt exportStatement() {
+        Token name = consume(TokenType.IDENTIFIER, "Expect module name after 'export'.");
+        consume(TokenType.SEMICOLON, "Expect ';' after export.");
+        return new Stmt.Export(name);
     }
 
     private Stmt returnStatement() {
@@ -208,6 +223,7 @@ public class Parser {
 
     private Stmt printStatement() {
         Expr value = expression();
+        //match(TokenType.SEMICOLON);
         consume(TokenType.SEMICOLON, "Expect ';' after value.");
         return new Stmt.Print(value);
     }
@@ -316,11 +332,15 @@ public class Parser {
         return call();
     }
 
+    // New call() method to support call expressions and property access.
     private Expr call() {
         Expr expr = primary();
         while (true) {
             if (match(TokenType.LEFT_PAREN)) {
                 expr = finishCall(expr);
+            } else if (match(TokenType.DOT)) {
+                Token name = consume(TokenType.IDENTIFIER, "Expect property name after '.'.");
+                expr = new Expr.Get(expr, name);
             } else {
                 break;
             }

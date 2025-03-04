@@ -160,6 +160,8 @@ public class Lexer {
             case "true" -> TokenType.TRUE;
             case "var" -> TokenType.VAR;
             case "while" -> TokenType.WHILE;
+            case "export" -> TokenType.EXPORT;
+            case "import" -> TokenType.IMPORT;
             default -> TokenType.IDENTIFIER;
         };
         addToken(type);
