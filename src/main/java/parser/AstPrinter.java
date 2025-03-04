@@ -2,8 +2,12 @@ package parser;
 
 import lexer.Token;
 import lexer.TokenType;
+import parser.Expr.Array;
+import parser.Expr.ArrayFixedSize;
 import parser.Expr.Call;
 import parser.Expr.Get;
+import parser.Expr.Index;
+import parser.Expr.IndexAssign;
 
 public class AstPrinter implements Expr.Visitor<String> {
   String print(Expr expr) {
@@ -81,5 +85,29 @@ public class AstPrinter implements Expr.Visitor<String> {
   public String visitGetExpr(Get expr) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'visitGetExpr'");
+  }
+
+  @Override
+  public String visitArrayExpr(Array expr) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitArrayExpr'");
+  }
+
+  @Override
+  public String visitIndexExpr(Index expr) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitIndexExpr'");
+  }
+
+  @Override
+  public String visitIndexAssignExpr(IndexAssign expr) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitIndexAssignExpr'");
+  }
+
+  @Override
+  public String visitArrayFixedSizeExpr(ArrayFixedSize expr) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitArrayFixedSizeExpr'");
   }
 }

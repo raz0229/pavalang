@@ -15,6 +15,8 @@ public class LengthFunction implements PavaCallable {
         Object arg = arguments.get(0);
         if (arg instanceof String) {
             return (double) ((String) arg).length();
+        } else if (arg instanceof List) {
+            return (double) ((List<?>)arg).size();
         }
         throw new RuntimeError(new Token(null, "NIL", "NIL", 0), "Argument to length() must be a string.");
     }

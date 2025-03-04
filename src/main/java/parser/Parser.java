@@ -33,8 +33,10 @@ public class Parser {
     }
 
     private Stmt statement() {
-        if (match(TokenType.IMPORT)) return importStatement();
-        if (match(TokenType.EXPORT)) return exportStatement();
+        if (match(TokenType.IMPORT))
+            return importStatement();
+        if (match(TokenType.EXPORT))
+            return exportStatement();
         if (match(TokenType.PRINT))
             return printStatement();
         if (match(TokenType.VAR))
@@ -61,7 +63,7 @@ public class Parser {
         consume(TokenType.SEMICOLON, "Expect ';' after import.");
         return new Stmt.Import(path);
     }
-    
+
     private Stmt exportStatement() {
         Token name = consume(TokenType.IDENTIFIER, "Expect module name after 'export'.");
         consume(TokenType.SEMICOLON, "Expect ';' after export.");
@@ -98,15 +100,15 @@ public class Parser {
         boolean foundDefaultBeforeLastParam = false;
 
         // check upto second-last element if it has a default value
-        for (int i = 0; i < parameters.size()-1; i++) {
+        for (int i = 0; i < parameters.size() - 1; i++) {
             Stmt.Function.Parameter param = parameters.get(i);
             if (param.defaultValue != null) {
                 foundDefaultBeforeLastParam = true;
-            } 
+            }
         }
 
-        if (foundDefaultBeforeLastParam 
-            && parameters.get(parameters.size()-1).defaultValue == null) {
+        if (foundDefaultBeforeLastParam
+                && parameters.get(parameters.size() - 1).defaultValue == null) {
             throw error(peek(), "Parameters with default values must be trailing.");
         }
 
@@ -214,7 +216,13 @@ public class Parser {
     private Stmt varDeclaration() {
         Token name = consume(TokenType.IDENTIFIER, "Expect variable name.");
         Expr initializer = null;
-        if (match(TokenType.EQUAL)) {
+        // Check for fixed-size array declaration.
+        if (match(TokenType.LEFT_BRACKET)) {
+            Expr sizeExpr = expression();
+            consume(TokenType.RIGHT_BRACKET, "Expect ']' after array size.");
+            // Use ArrayFixedSize node as initializer.
+            initializer = new Expr.ArrayFixedSize(sizeExpr);
+        } else if (match(TokenType.EQUAL)) {
             initializer = expression();
         }
         consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
@@ -223,7 +231,7 @@ public class Parser {
 
     private Stmt printStatement() {
         Expr value = expression();
-        //match(TokenType.SEMICOLON);
+        // match(TokenType.SEMICOLON);
         consume(TokenType.SEMICOLON, "Expect ';' after value.");
         return new Stmt.Print(value);
     }
@@ -247,6 +255,9 @@ public class Parser {
             if (expr instanceof Expr.Variable) {
                 Token name = ((Expr.Variable) expr).name;
                 return new Expr.Assign(name, value);
+            } else if (expr instanceof Expr.Index) {
+                Expr.Index indexExpr = (Expr.Index) expr;
+                return new Expr.IndexAssign(indexExpr.array, indexExpr.index, value);
             }
             throw error(equals, "Invalid assignment target.");
         }
@@ -341,6 +352,10 @@ public class Parser {
             } else if (match(TokenType.DOT)) {
                 Token name = consume(TokenType.IDENTIFIER, "Expect property name after '.'.");
                 expr = new Expr.Get(expr, name);
+            } else if (match(TokenType.LEFT_BRACKET)) {
+                Expr index = expression();
+                consume(TokenType.RIGHT_BRACKET, "Expect ']' after index.");
+                expr = new Expr.Index(expr, index);
             } else {
                 break;
             }
@@ -360,6 +375,8 @@ public class Parser {
     }
 
     private Expr primary() {
+        if (match(TokenType.LEFT_BRACKET))
+            return arrayLiteral();
         if (match(TokenType.TRUE))
             return new Expr.Literal(true);
         if (match(TokenType.FALSE))
@@ -436,5 +453,16 @@ public class Parser {
             return isBooleanOrNil(((Expr.Grouping) expr).expression);
         }
         return false;
+    }
+
+    private Expr arrayLiteral() {
+        List<Expr> elements = new ArrayList<>();
+        if (!check(TokenType.RIGHT_BRACKET)) {
+            do {
+                elements.add(expression());
+            } while (match(TokenType.COMMA));
+        }
+        consume(TokenType.RIGHT_BRACKET, "Expect ']' after array literal.");
+        return new Expr.Array(elements);
     }
 }
