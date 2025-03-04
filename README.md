@@ -54,36 +54,36 @@ Other distros:
 
   
 
-- [📖 Introduction](#introduction)
-- [🔤 Lexical Structure](#lexical-structure)
-- [📝 Syntax Overview](#syntax-overview)
-- [📦 Variables](#variables)
-- [🔧 Functions](#functions)
-- [👤 User-Defined Functions](#user-defined-functions)
-- [⚙️ Default Function Arguments](#default-function-arguments)
-- [🔙 Return Statements](#return-statements)
-- [🎛️ Control Flow](#control-flow)
-- [🔍 If Statements](#if-statements)
-- [🔄 While Statements](#while-statements)
-- [🔁 For Statements](#for-statements)
-- [🔗 Logical Operators](#logical-operators)
-- [🧱 Blocks and Scoping](#blocks-and-scoping)
-- [📊 Arrays (Lists)](#arrays-lists)
-- [📄 Array Literals](#array-literals)
-- [🔢 Index Access and Assignment](#index-access-and-assignment)
-- [📏 Fixed-Size Array Declarations](#fixed-size-array-declarations)
-- [📂 Modules](#modules)
-- [🛠️ Built-In Functions](#built-in-functions)
-- [📜 Code Examples](#code-examples)
-- [⚠️ Error Handling](#error-handling)
-- [🎉 Conclusion](#conclusion)
+- [📖 Introduction](#📖introduction)
+- [🔤 Lexical Structure](#🔤lexical-structure)
+- [📝 Syntax Overview](#📝syntax-overview)
+- [📦 Variables](#📦variables)
+- [🔧 Functions](#🔧functions)
+- [👤 User-Defined Functions](#👤user-defined-functions)
+- [⚙️ Default Function Arguments](#⚙️default-function-arguments)
+- [🔙 Return Statements](#🔙return-statements)
+- [🎛️ Control Flow](#🎛️control-flow)
+- [🔍 If Statements](#🔍if-statements)
+- [🔄 While Statements](#🔄while-statements)
+- [🔁 For Statements](#🔁for-statements)
+- [🔗 Logical Operators](#🔗logical-operators)
+- [🧱 Blocks and Scoping](#🧱blocks-and-scoping)
+- [📊 Arrays (Lists)](#📊arrays-lists)
+- [📄 Array Literals](#📄array-literals)
+- [🔢 Index Access and Assignment](#🔢index-access-and-assignment)
+- [📏 Fixed-Size Array Declarations](#📏fixed-size-array-declarations)
+- [📂 Modules](#📂modules)
+- [🛠️ Built-In Functions](#🛠️built-in-functions)
+- [📜 Code Examples](#📜code-examples)
+- [⚠️ Error Handling](#⚠️error-handling)
+- [🎉 Conclusion](#🎉conclusion)
   
 
 ---
 
   
 
-## 📖 Introduction
+## 📖Introduction
 
   
 
@@ -97,7 +97,7 @@ This documentation covers the complete syntax and built-in functionalities of Pa
 
   
 
-## 🔤 Lexical Structure
+## 🔤Lexical Structure
 
   
 
@@ -141,11 +141,11 @@ A file starting with `#!` (e.g., `#!/bin/pava`) is ignored by the lexer.
 
   
 
-## 📝 Syntax Overview
+## 📝Syntax Overview
 
   
 
-### 📦 Variables
+### 📦Variables
 
   
 
@@ -201,11 +201,11 @@ b    c \n
 ```
   
 
-### 🔧 Functions
+### 🔧Functions
 
   
 
-#### 👤 User-Defined Functions
+#### 👤User-Defined Functions
 
   
 
@@ -247,7 +247,7 @@ print add(3, 5); // Output: 8
 
   
 
-#### ⚙️ Default Function Arguments
+#### ⚙️Default Function Arguments
 
   
 
@@ -285,7 +285,7 @@ fun bar(x = 10, y) {} // Error: Parameters with default values must be trailing.
 
   
 
-#### 🔙 Return Statements
+#### 🔙Return Statements
 
   
 
@@ -329,11 +329,11 @@ print f(); // Output: nil
 
   
 
-### 🎛️ Control Flow
+### 🎛️Control Flow
 
   
 
-#### 🔍 If Statements
+#### 🔍If Statements
 
 The `if` statement tests a condition, executing the "then" branch if true; an optional `else` branch is available.
 
@@ -355,7 +355,7 @@ print "block body";
 
   
 
-#### 🔄 While Statements
+#### 🔄While Statements
 
 The `while` statement repeatedly executes its body while the condition remains truth *( No, Pava doesn't support ++)*.
 
@@ -381,7 +381,7 @@ i = i + 1;
 
   
 
-#### 🔁 For Statements
+#### 🔁For Statements
 
 For statements are desugared into a block that includes an initializer, condition, and increment clause. `For` is just syntatic sugar with underlying while loop.
 
@@ -413,7 +413,7 @@ print world;
 
   
 
-#### 🔗 Logical Operators
+#### 🔗Logical Operators
 
   
 
@@ -447,7 +447,7 @@ if ((true or "world")) print "world"; // Output: true (short-circuits)
 
   
 
-### 🧱 Blocks and Scoping
+### 🧱Blocks and Scoping
 
   
 
@@ -501,11 +501,11 @@ print hello;
 
   
 
-### 📊 Arrays (Lists)
+### 📊Arrays (Lists)
 
   
 
-#### 📄 Array Literals
+#### 📄Array Literals
 
 An array is a comma-separated list of values enclosed in square brackets.
 
@@ -537,7 +537,7 @@ print li[2]; // Output: true
 
   
 
-#### 🔢 Index Access & Assignment
+#### 🔢Index Access & Assignment
 
 Use square brackets to access and assign to array elements.
 
@@ -571,7 +571,7 @@ print str; // Output: ZYCDEF
 
   
 
-#### 📏 Fixed-Size Array Declarations
+#### 📏Fixed-Size Array Declarations
 
 Declaring a variable with square brackets after its name creates an array of fixed size with all elements initialized to `nil`.
 
@@ -605,7 +605,7 @@ Accessing an index out of range results in a runtime error.
 
   
 
-### 📂 Modules
+### 📂Modules
 
   
 
@@ -670,7 +670,7 @@ print Math.multiplyTwo(2,7); // Output: 14
   
   
 
-## 🛠️ Built-In Functions
+## 🛠️Built-In Functions
 
   
 
@@ -968,7 +968,7 @@ print fromAsciiCode(65); // Output: A
 
   
 
-## ⚠️ Error Handling
+## ⚠️Error Handling
 
   
 
@@ -1016,7 +1016,7 @@ Files starting with `#!` are automatically skipped by the lexer.
 
   
 
-## 🎉 Conclusion
+## 🎉Conclusion
 
   
 
