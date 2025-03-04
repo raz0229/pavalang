@@ -1,4 +1,6 @@
-var arr[3];
+pao "module";
+
+let arr[3];
 arr[0] = 71;
 arr[1] = 29;
 arr[2] = 12;

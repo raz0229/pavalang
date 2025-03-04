@@ -160,10 +160,10 @@ public class Lexer {
             case "super" -> TokenType.SUPER;
             case "this" -> TokenType.THIS;
             case "true" -> TokenType.TRUE;
-            case "var" -> TokenType.VAR;
+            case "let" -> TokenType.VAR;
             case "while" -> TokenType.WHILE;
-            case "export" -> TokenType.EXPORT;
-            case "import" -> TokenType.IMPORT;
+            case "kaddo" -> TokenType.EXPORT;
+            case "pao" -> TokenType.IMPORT;
             default -> TokenType.IDENTIFIER;
         };
         addToken(type);
