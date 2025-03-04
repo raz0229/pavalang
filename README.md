@@ -29,23 +29,23 @@ This document provides comprehensive documentation for the Pava language. Pava i
 💫 Run and Test `pava` from working directory:
 ```
 
-	./pava source.pava
+ ./pava source.pava
 
 ```
 
 ## ⚙️ Install 
 From PKGBUILD on `Arch Linux` in working directory:
 ```
-	makepkg -si
+ makepkg -si
 ```
 
 or simply, install from `AUR` using your favorite AUR helper:
 ```
-	yaourt -S pavalang
+ yaourt -S pavalang
 ```
 Other distros:
 ```
-	sudo snap install pavalang --beta
+ sudo snap install pavalang --beta
 ```
 
   
