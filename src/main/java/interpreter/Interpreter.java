@@ -112,8 +112,8 @@ public class Interpreter {
                     path = path + ".pava";
                 }
 
-                    // Attempt to find the module in /usr/share/pava first, then in the working directory.
-                java.nio.file.Path modulePath = java.nio.file.Path.of("/usr/share/pava", path);
+                    // Attempt to find the module in /usr/local/share/pava first, then in the working directory.
+                java.nio.file.Path modulePath = java.nio.file.Path.of("/usr/local/share/pava", path);
                 if (!java.nio.file.Files.exists(modulePath)) {
                     modulePath = java.nio.file.Path.of(path);
                     if (!java.nio.file.Files.exists(modulePath)) {
