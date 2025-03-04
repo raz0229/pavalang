@@ -33,4 +33,9 @@ set -e
 exec java -jar /usr/lib/pava/pava.jar "$@"
 EOF
   chmod +x "$pkgdir/usr/bin/pava"
+
+  # Copy contents of ./src/main/lib/ to /usr/share/pava
+  install -d "$pkgdir/usr/share/pava"
+  install -m 644 "$srcdir/main/lib/"*.pava "$pkgdir/usr/share/pava/"
+  
 }

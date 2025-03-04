@@ -1,5 +1,5 @@
 
-# PavaLang Interpreter
+# 💪 PavaLang Interpreter
 ![PavaLang Poster](https://i.ibb.co/9kK6V80X/pavalang-poster.png)
   
 
@@ -12,64 +12,78 @@ This document provides comprehensive documentation for the Pava language. Pava i
 ---
 
   
+  ## 🔧 Build and Test Locally
+### 🧰 Dependencies:
+`maven` and `jdk17-openjdk` *(Install from your package manager)*
 
-## Table of Contents
+ ⚒️ Build package with maven:
+  ```
+
+	git clone https://github.com/raz0229/pavalang.git
+	cd pavalang
+	chmod +x ./build.sh
+	sudo ./build.sh
+
+```
+
+💫 Run and Test `pava` from working directory:
+```
+
+	./pava source.pava
+
+```
+
+## ⚙️ Install 
+From PKGBUILD on `Arch Linux` in working directory:
+```
+	makepkg -si
+```
+
+or simply, install from `AUR` using your favorite AUR helper:
+```
+	yaourt -S pavalang
+```
+Other distros:
+```
+	sudo snap install pavalang --beta
+```
 
   
 
--  [Introduction](#introduction)
+## ⌨️ Table of Contents
 
--  [Lexical Structure](#lexical-structure)
+  
 
--  [Syntax Overview](#syntax-overview)
-
--  [Variables](#variables)
-
--  [Functions](#functions)
-
--  [User-Defined Functions](#user-defined-functions)
-
--  [Default Function Arguments](#default-function-arguments)
-
--  [Return Statements](#return-statements)
-
--  [Control Flow](#control-flow)
-
--  [If Statements](#if-statements)
-
--  [While Statements](#while-statements)
-
--  [For Statements](#for-statements)
-
--  [Logical Operators](#logical-operators)
-
--  [Blocks and Scoping](#blocks-and-scoping)
-
--  [Arrays (Lists)](#arrays-lists)
-
--  [Array Literals](#array-literals)
-
--  [Index Access and Assignment](#index-access-and-assignment)
-
--  [Fixed-Size Array Declarations](#fixed-size-array-declarations)
-
--  [Modules](#modules)
-
--  [Built-In Functions](#built-in-functions)
-
--  [Code Examples](#code-examples)
-
--  [Error Handling](#error-handling)
-
--  [Conclusion](#conclusion)
-
+- [📖 Introduction](#introduction)
+- [🔤 Lexical Structure](#lexical-structure)
+- [📝 Syntax Overview](#syntax-overview)
+- [📦 Variables](#variables)
+- [🔧 Functions](#functions)
+- [👤 User-Defined Functions](#user-defined-functions)
+- [⚙️ Default Function Arguments](#default-function-arguments)
+- [🔙 Return Statements](#return-statements)
+- [🎛️ Control Flow](#control-flow)
+- [🔍 If Statements](#if-statements)
+- [🔄 While Statements](#while-statements)
+- [🔁 For Statements](#for-statements)
+- [🔗 Logical Operators](#logical-operators)
+- [🧱 Blocks and Scoping](#blocks-and-scoping)
+- [📊 Arrays (Lists)](#arrays-lists)
+- [📄 Array Literals](#array-literals)
+- [🔢 Index Access and Assignment](#index-access-and-assignment)
+- [📏 Fixed-Size Array Declarations](#fixed-size-array-declarations)
+- [📂 Modules](#modules)
+- [🛠️ Built-In Functions](#built-in-functions)
+- [📜 Code Examples](#code-examples)
+- [⚠️ Error Handling](#error-handling)
+- [🎉 Conclusion](#conclusion)
   
 
 ---
 
   
 
-## Introduction
+## 📖 Introduction
 
   
 
@@ -83,17 +97,17 @@ This documentation covers the complete syntax and built-in functionalities of Pa
 
   
 
-## Lexical Structure
+## 🔤 Lexical Structure
 
   
 
-### Comments
+### 💬 Comments
 
 Use `//` for single-line comments.
 
   
 
-### Tokens
+### 🧩 Tokens
 
 Pava tokens include:
 
@@ -117,7 +131,7 @@ Pava tokens include:
 
   
 
-### Shebang
+### 🐚 Shebang
 
 A file starting with `#!` (e.g., `#!/bin/pava`) is ignored by the lexer.
 
@@ -127,15 +141,15 @@ A file starting with `#!` (e.g., `#!/bin/pava`) is ignored by the lexer.
 
   
 
-## Syntax Overview
+## 📝 Syntax Overview
 
   
 
-### Variables
+### 📦 Variables
 
   
 
-#### Declaration
+#### 📄 Declaration
 
 Variables are declared using the `let` keyword.
 
@@ -155,7 +169,7 @@ let flag = true;
 
   
 
-#### Assignment
+#### 🔄 Assignment
 
 Variables can be reassigned using the `=` operator.
 
@@ -169,7 +183,7 @@ a = 20;
 
 ```
 
-### Print statement with Escape Sequences
+### 🖨️ Print statement with Escape Sequences
 
 ```Pava
 
@@ -187,11 +201,11 @@ b    c \n
 ```
   
 
-### Functions
+### 🔧 Functions
 
   
 
-#### User-Defined Functions
+#### 👤 User-Defined Functions
 
   
 
@@ -233,7 +247,7 @@ print add(3, 5); // Output: 8
 
   
 
-#### Default Function Arguments
+#### ⚙️ Default Function Arguments
 
   
 
@@ -271,7 +285,7 @@ fun bar(x = 10, y) {} // Error: Parameters with default values must be trailing.
 
   
 
-#### Return Statements
+#### 🔙 Return Statements
 
   
 
@@ -315,11 +329,11 @@ print f(); // Output: nil
 
   
 
-### Control Flow
+### 🎛️ Control Flow
 
   
 
-#### If Statements
+#### 🔍 If Statements
 
 The `if` statement tests a condition, executing the "then" branch if true; an optional `else` branch is available.
 
@@ -341,7 +355,7 @@ print "block body";
 
   
 
-#### While Statements
+#### 🔄 While Statements
 
 The `while` statement repeatedly executes its body while the condition remains truth *( No, Pava doesn't support ++)*.
 
@@ -367,7 +381,7 @@ i = i + 1;
 
   
 
-#### For Statements
+#### 🔁 For Statements
 
 For statements are desugared into a block that includes an initializer, condition, and increment clause. `For` is just syntatic sugar with underlying while loop.
 
@@ -399,7 +413,7 @@ print world;
 
   
 
-#### Logical Operators
+#### 🔗 Logical Operators
 
   
 
@@ -433,7 +447,7 @@ if ((true or "world")) print "world"; // Output: true (short-circuits)
 
   
 
-### Blocks and Scoping
+### 🧱 Blocks and Scoping
 
   
 
@@ -487,11 +501,11 @@ print hello;
 
   
 
-### Arrays (Lists)
+### 📊 Arrays (Lists)
 
   
 
-#### Array Literals
+#### 📄 Array Literals
 
 An array is a comma-separated list of values enclosed in square brackets.
 
@@ -523,7 +537,7 @@ print li[2]; // Output: true
 
   
 
-#### Index Access & Assignment
+#### 🔢 Index Access & Assignment
 
 Use square brackets to access and assign to array elements.
 
@@ -557,7 +571,7 @@ print str; // Output: ZYCDEF
 
   
 
-#### Fixed-Size Array Declarations
+#### 📏 Fixed-Size Array Declarations
 
 Declaring a variable with square brackets after its name creates an array of fixed size with all elements initialized to `nil`.
 
@@ -585,13 +599,13 @@ print arr[2]; // Output: 12
 
   
 
-#### Bounds Checking
+#### 🚫 Bounds Checking
 
 Accessing an index out of range results in a runtime error.
 
   
 
-### Modules
+### 📂 Modules
 
   
 
@@ -629,7 +643,7 @@ kaddo Math;
 
 ```Pava
 
-pao "math"; // Extension (.pava) is optional; system will search /usr/local/share/pava first.
+pao "math"; // Extension (.pava) is optional; system will search /usr/share/pava first.
 
   
 
@@ -643,7 +657,7 @@ print Math.multiplyTwo(2,7); // Output: 14
 
 **Module Import Behavior:**
 
-1. The interpreter first searches for the module in `/usr/local/share/pava`
+1. The interpreter first searches for the module in `/usr/share/pava`
 
 2. If not found, it searches in the working directory
 
@@ -656,7 +670,7 @@ print Math.multiplyTwo(2,7); // Output: 14
   
   
 
-## Built-In Functions
+## 🛠️ Built-In Functions
 
   
 
@@ -954,7 +968,7 @@ print fromAsciiCode(65); // Output: A
 
   
 
-## Error Handling
+## ⚠️ Error Handling
 
   
 
@@ -962,7 +976,7 @@ Pava provides runtime and syntax error messages with line numbers.
 
   
 
-### Syntax Errors
+### 🚫 Syntax Errors
 
 When a syntax error is encountered, a message is displayed in the format:
 
@@ -976,7 +990,7 @@ When a syntax error is encountered, a message is displayed in the format:
 
   
 
-### Runtime Errors
+### 🚨 Runtime Errors
 
 For example, trying to access an out-of-range index or using an invalid operand will print:
 
@@ -990,19 +1004,19 @@ For example, trying to access an out-of-range index or using an invalid operand 
 
   
 
-### Return Statement
+### 🔙 Return Statement
 
 If a function returns a value using `return`, it will properly exit the function body.
 
   
 
-### Shebang
+### 🐚 Shebang
 
 Files starting with `#!` are automatically skipped by the lexer.
 
   
 
-## Conclusion
+## 🎉 Conclusion
 
   
 
@@ -1038,4 +1052,4 @@ This documentation serves as a complete reference for developers using Pava. As 
 
   
 
-**Happy coding in Pava!**
+**Happy coding in Pava! 🎉**
