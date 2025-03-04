@@ -11,8 +11,8 @@ public class ClockFunction implements PavaCallable {
     
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
-        // Returns current time in seconds.
-        return (double) (System.currentTimeMillis() / 1000);
+        // Returns current time in milliseconds.
+        return (double) System.currentTimeMillis();
     }
     
     @Override
