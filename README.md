@@ -167,6 +167,22 @@ a = 20;
 
 ```
 
+### Print statement with Escape Sequences
+
+```Pava
+
+print "a\nb\tc \\n";
+
+```
+
+Outputs:
+
+```Console
+
+a
+b    c \n
+
+```
   
 
 ### Functions
