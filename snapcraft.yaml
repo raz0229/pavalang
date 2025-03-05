@@ -1,4 +1,4 @@
-name: pavalang
+name: pava
 version: '1.0'
 summary: Pava Interpreter
 description: |
@@ -20,6 +20,8 @@ parts:
     build-packages:
       - maven
       - openjdk-17-jdk   # Adjust this if the package name differs in the builder environment
+    stage-packages:
+      - openjdk-17-jre-headless
     override-build: |
       set -e
       # Build the project using Maven
@@ -30,3 +32,7 @@ parts:
       cp target/pava.jar $SNAPCRAFT_PART_INSTALL/
       # Copy the shell script into the bin directory so it becomes the command entrypoint
       cp pava $SNAPCRAFT_PART_INSTALL/bin/
+      # Create destination directory for .pava files
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/pava
+      # Copy all .pava files from ./src/main/lib to the destination directory
+      cp ./src/main/lib/*.pava $SNAPCRAFT_PART_INSTALL/usr/share/pava/
