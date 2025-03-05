@@ -24,13 +24,31 @@ class Pava {
     public static void main(String[] args) {
         // If more than one argument is passed, show usage.
         if (args.length > 1) {
-            System.err.println("Usage: ./pava <filename> or ./pava -v|--version");
+            System.out.println("Usage: pava [OPTION].. [FILE]");
+            System.out.println("\npava\t launch Pava interactive shell");
+            System.out.println("pava <filename>\t executes the source file using the Pava interpreter");
+            System.out.println("-?, --help\t displays this help message");
+            System.out.println("-v, --version\t show version information");
             System.exit(64);
         }
 
         // Check if the user requested version information.
         if (args.length == 1 && (args[0].equals("-v") || args[0].equals("--version"))) {
             System.out.println("PavaLang 1.0.0");
+            System.exit(0);
+        }
+
+        // User help
+        if (args.length == 1 && (args[0].equals("-?") || args[0].equals("--help"))) {
+            System.out.println("PavaLang Tree-Walking Interpreter 1.0.0");
+            System.out.println("Author: @raz0229");
+            System.out.println("https://github.com/raz0229/pavalang");
+            System.out.println();
+            System.out.println("Usage: pava [OPTION].. [FILE]");
+            System.out.println("\npava\t launch Pava interactive shell");
+            System.out.println("pava <filename>\t executes the source file using the Pava interpreter");
+            System.out.println("-?, --help\t displays this help message");
+            System.out.println("-v, --version\t show version information");
             System.exit(0);
         }
 
@@ -108,9 +126,11 @@ class Pava {
             }
             else if (line.trim().equals("quit")) {
                 System.out.println("Use quit() or Ctrl-D (i.e. EOF) to exit");
+                continue;
             }
             else if (line.trim().equals("help")) {
                 System.out.println("Use help() or Ctrl-D (i.e. EOF) to exit");
+                continue;
             }
             try {
                 Lexer lexer = new Lexer(line);
