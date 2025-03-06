@@ -2,37 +2,38 @@ name: pava
 version: '1.0'
 summary: Pava Interpreter
 description: |
-  Pava is a simple Tree-walking interpreter built using Java that combines the syntax of Python with the goodness of Java. This snap builds the project using Maven,
-  packages the resulting JAR along with a launcher script, and ensures the required Java runtime is available.
-base: core20
-confinement: strict
+  Pava is a simple Tree-walking interpreter built using Java.
 grade: stable
+confinement: strict
+base: core20
+
+parts:
+  # Part for the Java runtime
+  openjdk:
+    plugin: nil
+    stage-packages:
+      - openjdk-17-jre-headless  # Bundle the Java runtime
+
+  # Part for your JAR and launcher script
+  pava:
+    plugin: dump
+    source: .
+    organize:
+      pava: usr/bin/pava  # Move the launcher script to usr/bin/
+    stage:
+      - pava.jar  # Stage the JAR file
+      - usr/bin/pava  # Stage the launcher script
+
+  # Part for the .pava library files
+  pava-lib:
+    plugin: dump
+    source: ./src/main/lib
+    organize:
+      '*.pava': usr/share/pava/  # Move .pava files to usr/share/pava/
 
 apps:
   pava:
-    command: bin/pava
+    command: usr/bin/pava  # Points to the launcher script
     plugs: [network]
-
-parts:
-  pava:
-    plugin: nil
-    source: .
-    build-packages:
-      - maven
-      - openjdk-17-jdk   # Adjust this if the package name differs in the builder environment
-    stage-packages:
-      - openjdk-17-jre-headless
-    override-build: |
-      set -e
-      # Build the project using Maven
-      mvn clean package
-      # Create the destination directory for the shell script
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      # Copy the jar produced by Maven (adjust path if needed)
-      cp target/pava.jar $SNAPCRAFT_PART_INSTALL/
-      # Copy the shell script into the bin directory so it becomes the command entrypoint
-      cp pava $SNAPCRAFT_PART_INSTALL/bin/
-      # Create destination directory for .pava files
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/pava
-      # Copy all .pava files from ./src/main/lib to the destination directory
-      cp ./src/main/lib/*.pava $SNAPCRAFT_PART_INSTALL/usr/share/pava/
+    environment:
+      PAVA_LIB_DIR: $SNAP/usr/share/pava

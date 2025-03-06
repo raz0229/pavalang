@@ -1,6 +1,9 @@
+pao "string";
 
 let arr[3];
 arr[0] = 71;
 arr[1] = 29;
 arr[2] = 12;
 print arr[0] - arr[1];
+
+print "\n";

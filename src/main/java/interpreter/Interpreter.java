@@ -120,9 +120,17 @@ public class Interpreter {
                     path = path + ".pava";
                 }
 
-                // Attempt to find the module in /usr/local/share/pava first, then in the
+                // Attempt to find the module in /usr/share/pava first, then in the
                 // working directory.
-                java.nio.file.Path modulePath = java.nio.file.Path.of("/usr/local/share/pava", path);
+
+                // workaround for snap package
+                String libraryBaseDir = System.getenv("PAVA_LIB_DIR");
+                if (libraryBaseDir == null || libraryBaseDir.isEmpty()) {
+                    // Fallback to the original hardcoded path (optional)
+                    libraryBaseDir = "/usr/share/pava";
+                }
+
+                java.nio.file.Path modulePath = java.nio.file.Path.of(libraryBaseDir, path);
                 if (!java.nio.file.Files.exists(modulePath)) {
                     modulePath = java.nio.file.Path.of(path);
                     if (!java.nio.file.Files.exists(modulePath)) {
