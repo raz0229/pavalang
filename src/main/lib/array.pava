@@ -1,0 +1,85 @@
+// Array.pava
+
+// push(arr, value)
+// Returns a new array that is a copy of arr with the given value appended at the end.
+fun push(arr, value) {
+  let len = length(arr);
+  let newArr[len+1];
+  let i = 0;
+  while (i < len) {
+    newArr[i] = arr[i];
+    i = i + 1;
+  }
+  newArr[len] = value;
+  return newArr;
+}
+
+// pop(arr)
+// Returns a new array that is a copy of arr with the last element removed.
+fun pop(arr) {
+  let len = length(arr)-1;
+  let newArr[len];
+  let i = 0;
+  while (i < len) {
+    newArr[i] = arr[i];
+    i = i + 1;
+  }
+  return newArr;
+}
+
+// join(arr, separator)
+// Concatenates the string representation of each element in arr,
+// inserting the separator between elements.
+fun join(arr, separator) {
+  let result = "";
+  let len = length(arr);
+  let i = 0;
+  while (i < len) {
+    result = result + string(arr[i]);
+    if (i < len - 1) {
+      result = result + separator;
+    }
+    i = i + 1;
+  }
+  return result;
+}
+
+// setAt(arr, index, value)
+// Returns a new array that is a copy of arr with value assigned at the given index.
+// If index is within bounds, it replaces that element; if index is equal to the current length,
+// the array is grown by one (and any intermediate missing elements are filled with nil).
+fun setAt(arr, index, value) {
+  let len = length(arr);
+  let newArr[len];
+  let i = 0;
+  // Copy existing elements.
+  while (i < len) {
+    newArr[i] = arr[i];
+    i = i + 1;
+  }
+  // If index is greater than the current length, fill missing indices with nil.
+  while (i < index) {
+    newArr[i] = nil;
+    i = i + 1;
+  }
+  newArr[index] = value;
+  return newArr;
+}
+
+// Fixed-size array declaration.
+// Declares an array of a fixed size (all elements initially nil).
+// Example: let arr[3];
+fun fixedArray(size) {
+  let n = number(size);
+  let intSize = n; // Assuming n is a number.
+  let arr[intSize];
+  let i = 0;
+  while (i < intSize) {
+    arr[i] = nil;
+    i = i + 1;
+  }
+  return arr;
+}
+
+
+kaddo Array;

@@ -1,0 +1,202 @@
+// string.pava
+// author: @raz0229
+
+fun charAt(str, i) {
+    if (typeof(str) == "STRING"
+        and typeof(i) == "NUMBER" 
+        and i < length(str)) {
+        return str[i];
+    } else {
+        return nil;
+    }
+}
+
+fun charCodeAt(str, i) {
+    if (typeof(str) == "STRING"
+        and typeof(i) == "NUMBER" 
+        and i < length(str)) {
+        return getAsciiCode(str[i]);
+    } else {
+        return nil;
+    }
+}
+
+fun concat(str1, str2) {
+    if (typeof(str1)=="NUMBER") { str1 = string(str1); }
+    if (typeof(str2)=="NUMBER") { str2 = string(str2); }
+    return str1 + str2;
+}
+
+fun includes(str, searchString) {
+    if (!typeof(searchString == "STRING")){
+        return nil;
+    }
+    for (let i=0; i<=length(str)-length(searchString); i=i+1) {
+        let found = true;
+        let k = 0;
+        for (let j=i; j<i+length(searchString); j=j+1) {
+            if (str[j] != searchString[k]) {
+                found = false;
+            }
+            k = k+1;
+        }
+        if (found == true) {
+            return true;
+        }
+    }
+    return false;
+}
+
+fun endsWith(str, searchString) {
+    if (!typeof(searchString == "STRING")){
+        return nil;
+    }
+
+    let found = true;
+    let k = 0;
+    for (let i=length(str)-length(searchString); i<length(str); i=i+1) {
+        if (str[i] != searchString[k]) {
+            found = false;
+        }
+        k = k+1;
+    }
+    if (found == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+fun startsWith(str, searchString) {
+    if (!typeof(searchString == "STRING")){
+        return nil;
+    }
+
+    let found = true;
+    let k = 0;
+    for (let i=0; i<length(searchString); i=i+1) {
+        if (str[i] != searchString[k]) {
+            found = false;
+        }
+        k = k+1;
+    }
+    if (found == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+fun indexOf(str, searchString) {
+    if (!typeof(searchString == "STRING")){
+        return nil;
+    }
+    for (let i=0; i<=length(str)-length(searchString); i=i+1) {
+        let found = true;
+        let k = 0;
+        let j = i;
+        for (; j<i+length(searchString); j=j+1) {
+            if (str[j] != searchString[k]) {
+                found = false;
+            }
+            k = k+1;
+        }
+        if (found == true) {
+            return j-k;
+        }
+    }
+    return -1;
+}
+
+fun lastIndexOf(str, searchString) {
+    if (typeof(searchString) != "STRING"){
+        return nil;
+    }
+    for (let i=length(str)-1; i>=length(searchString); i=i-1) {
+        let found = true;
+        let k = length(searchString) - 1;
+        let j = i;
+        for (; j>i-length(searchString); j=j-1) {
+            if (str[j] != searchString[k]) {
+                found = false;
+            }
+            k = k-1;
+        }
+        if (found == true) {
+            return j-k;
+        }
+    }
+    return -1;
+}
+
+fun substring(str, startIndex, endIndex) {
+    if (typeof(str) != "STRING"
+        or typeof(startIndex) != "NUMBER"
+        or typeof(endIndex) != "NUMBER"
+    ) {
+        return nil;
+    }
+    let substr = "";
+    for (let i=startIndex; i<endIndex; i=i+1) {
+        substr = substr + str[i];
+    }
+    return substr;
+}
+
+// replace first occurence of searchValue with replaceValue
+fun replace(str, searchValue, replaceValue) {
+    if (typeof(str) != "STRING"
+        or typeof(searchValue) != "STRING"
+        or typeof(replaceValue) != "STRING") {
+            return nil;
+        }
+    let startIndex = indexOf(str, searchValue);
+    if (startIndex == -1) {
+        return nil;
+    }
+
+    let substr = substring(str, 0, startIndex);
+
+    let k = 0;
+    for (let k=0; k<length(replaceValue); k=k+1) {
+        substr = substr + replaceValue[k];
+    }
+
+    return substr + substring(str, startIndex+length(searchValue), length(str));   
+}
+
+// replace all occurences of searchValue with replaceValue
+fun replaceAll(str, searchValue, replaceValue) {
+    if (typeof(str) != "STRING"
+        or typeof(searchValue) != "STRING"
+        or typeof(replaceValue) != "STRING") {
+            return nil;
+        }
+    let startIndex = indexOf(str, searchValue);
+    if (startIndex == -1) {
+        return nil;
+    }
+
+    let substr = substring(str, 0, startIndex);
+
+    let k = 0;
+    for (let k=0; k<length(replaceValue); k=k+1) {
+        substr = substr + replaceValue[k];
+    }
+
+    let restStr = substring(str, startIndex+length(searchValue), length(str));
+    // return substr + restStr;
+    if (includes(restStr, searchValue)) {
+        // cannot recursively call here for some reason
+        let recursiveStr = replaceAll(restStr, searchValue, replaceValue);
+        if (recursiveStr != nil) {
+            substr = substr + recursiveStr;
+        }
+    } else {
+        print substr;
+        return substr;
+    }
+}
+
+
+kaddo String;

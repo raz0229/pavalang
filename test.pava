@@ -1,9 +1,13 @@
 pao "string";
+pao "array";
 
-let arr[3];
-arr[0] = 71;
-arr[1] = 29;
-arr[2] = 12;
-print arr[0] - arr[1];
 
-print "\n";
+//print String.substring("hello", 0, 5);
+//print String.replaceAll("hello world", "l", "li");
+
+let arr = [1, 2, 3];
+arr = Array.push(arr, 4);   // Expected output: [1,2,3,4] (depending on your array formatting)
+print arr;
+arr = Array.pop(arr);       // Expected output: 4
+print arr;
+print Array.join(arr, ", "); // Expected output: "1, 2, 3"

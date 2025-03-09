@@ -1,6 +1,14 @@
 // string.pava
-// author: <AUTHOR_NAME>
+// author: @raz0229
 
-// write functions here
+fun charAt(str, i) {
+    if (typeof(str) == "String"
+        and typeof(i) == "Number" 
+        and i < length(str)) {
+        return str[i];
+    } else {
+        return nil;
+    }
+}
 
 kaddo String;
