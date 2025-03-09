@@ -1,6 +1,6 @@
 
 # 💪 PavaLang Interpreter
-![PavaLang Poster](https://i.ibb.co/9kK6V80X/pavalang-poster.png)
+![PavaLang Poster](https://i.ibb.co/N60rkbTK/pavalang-poster.png)
   
 
   
