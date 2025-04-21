@@ -1,6 +1,49 @@
 // math.pava
-// author: <AUTHOR_NAME>
+// author: talhaabidj
 
-// write functions here
+// add(a, b)
+// Returns the sum of two numbers.
+fun add(a, b) {
+  return a + b;
+}
+
+// subtract(a, b)
+// Returns the difference of two numbers.
+fun subtract(a, b) {
+  return a - b;
+}
+
+// multiply(a, b)
+// Returns the product of two numbers.
+fun multiply(a, b) {
+  return a * b;
+}
+
+// divide(a, b)
+// Returns the quotient of two numbers.
+fun divide(a, b) {
+  if (b == 0) {
+    return nil; // Avoid division by zero.
+  }
+  return a / b;
+}
+
+// mod(a, b)
+// Returns the remainder after division.
+fun mod(a, b) {
+  return a % b;
+}
+
+// max(a, b)
+// Returns the larger of two numbers.
+fun max(a, b) {
+  return a > b ? a : b;
+}
+
+// min(a, b)
+// Returns the smaller of two numbers.
+fun min(a, b) {
+  return a < b ? a : b;
+}
 
 kaddo Math;
